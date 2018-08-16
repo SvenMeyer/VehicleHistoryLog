@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "./ERC721.sol";
 import "./ERC721BasicToken.sol";
-import ".//SupportsInterfaceWithLookup.sol";
+import "./SupportsInterfaceWithLookup.sol";
 
 
 /**
@@ -11,7 +11,8 @@ import ".//SupportsInterfaceWithLookup.sol";
  * Moreover, it includes approve all functionality using operator terminology
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
-contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
+
+contract ERC721Token is ERC721BasicToken, ERC721 /* ,SupportsInterfaceWithLookup */  {
 
   // Token name
   string internal name_;
@@ -46,6 +47,8 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
     _registerInterface(InterfaceId_ERC721Metadata);
   }
 
+  // implement ERC721Metadata <start>
+
   /**
    * @dev Gets the token name
    * @return string representing the token name
@@ -71,6 +74,10 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
     require(_exists(_tokenId));
     return tokenURIs[_tokenId];
   }
+
+  // implement ERC721Metadata <end>
+
+  // implement ERC721Enumerable <start>
 
   /**
    * @dev Gets the token ID at a given index of the tokens list of the requested owner
@@ -108,6 +115,8 @@ contract ERC721Token is SupportsInterfaceWithLookup, ERC721BasicToken, ERC721 {
     require(_index < totalSupply());
     return allTokens[_index];
   }
+
+   // implement ERC721Enumerable <end>
 
   /**
    * @dev Internal function to set the token URI for a given token

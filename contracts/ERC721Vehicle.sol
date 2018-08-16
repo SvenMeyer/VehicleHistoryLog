@@ -14,12 +14,19 @@ import "./SupportsInterfaceWithLookup.sol";
  */
 contract ERC721Vehicle is ERC721Token {
 
-	uint vehicleID;
-	string make;
-	string model;
+	// creator of this contract (=vehicle manufaturer) and the only one allowed to mint new vehicle token
+	address creator;
+
+	// vehicle token serial numbers will get numbered starting from 1 (we reserve 0 for not existing/allowed)
+	uint internal serial = 0;
+
+	// uint vehicleID; -> tokenId
+	// string make;    -> 
+	// string model;
 	string chassisNumber;
 	string engineNumber;
 
+	// https://github.com/saurfang/ipfs-multihash-on-solidity
 	struct IPFSMultihash {
 		bytes32 digest;
 		uint8 hashFunction;
@@ -34,7 +41,7 @@ contract ERC721Vehicle is ERC721Token {
     }
 
 	LogEntry[] HistoryLog;
-	
+
 	// Mapping from Vehicle (token id) to HistoryLog
 	mapping(uint256 => uint256) internal allTokensIndex;
 
@@ -42,8 +49,26 @@ contract ERC721Vehicle is ERC721Token {
 	/**
 	 * @dev Constructor function
 	 */
-	// constructor() public {
-		// should all be (automatically) be done in the super class ERC721Token
-	// }
+	constructor(string _name, string _symbol) ERC721Token(_name, _symbol) public {
+		creator = msg.sender;
+	}
 
+	/**
+	* @dev public function to mint a new token for a new car
+	* @return uint serial number of new vehicle token
+	*/
+	function mintNext() public returns (uint) {
+		require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
+		serial += 1;
+		_mint(creator, serial);
+		return serial;
+	}
+
+	/**
+	* @dev get serial number of last produced vehicle = minted token
+	* @return uint serial number of new vehicle token
+	*/
+	function getLastSerial() public view returns (uint) {
+		return serial;
+	}
 }
