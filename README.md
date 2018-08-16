@@ -1,7 +1,7 @@
 # VehicleHistoryLog
 
 ## Motivation
-A vehicle's value is to a great extend determined by the miles driven and the service history. Historically paper-based log books have been used to keep a record, but fraudulent car dealer like to manipulate them to pretend a lower milage and better service history in order to gain a higher price. In addition, blank car service history log books are easily available to everybody on ebay which makes this fraud even easiert to carry out.
+A vehicle's value is to a great extend determined by the miles driven and the service history. Historically paper-based log books have been used to keep a record, but fraudulent vehicle dealer like to manipulate them to pretend a lower milage and better service history in order to gain a higher price. In addition, blank vehicle service history log books are easily available to everybody on ebay which makes this fraud even easiert to carry out.
 
 To fix this process a blockchain based system shall be developed.
 Blockchain based system have quite some outstanding features, with most of them being highly desireable for this application:
@@ -26,7 +26,7 @@ Blockchain based system have quite some outstanding features, with most of them 
 Allowed users : Vehicle Manufacturer  
 (The initial version may assume that there is only one Vehicle Manufacturer.)
 
-1.1 Vehicle Manufacturer creates a new instance of a car providing initial immutable data of the vehicle:
+1.1 Vehicle Manufacturer creates a new instance of a vehicle providing initial immutable data of the vehicle:
 * vehicle id
 * make
 * model
@@ -49,7 +49,7 @@ Allowed users : Service Provider, Owner (for self-service tasks)
 
 ### 4 get (last) log entry for vehicle
 Allowed users : any  
-4.1 get last log entry for a vehicle (specified by its id)
+4.1 get last log entry for a vehicle (specified by its id)  
 4.2 return log entry id (= number of current log entries)
 
 ### 5 get log entry for vehicle by id
@@ -60,15 +60,25 @@ Allowed users : any
 Allowed users : Owner  
 6.1 offer vehicle for sale by providing
 * status update (for sale = true)
-* requested price (in Wei)
+* set requested price (in Wei)
 
-### 7 buy car
+### 7 buy vehicle
 Allowed users : any  
 7.1 user accept offer by sending at least the requested amount to current vehicle owner
 7.2 return potential surplus amount to buyer (full amount if it was less than requested price)
-7.3 transfer ownership of car to buyer
+7.3 transfer ownership of vehicle to buyer
+
+### 8 burn vehicle
+Allowed users : Owner  
+8.1 remove vehicle from existence
 
 
+## Implemetation Approach
+For the outlined requirements, an implementation based on Non-Fungible-Token (NFT) as defined in [ERC721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md) seems to be a perfect fit.
 
+Every ERC-721 compliant contract must implement the ERC721 and ERC165 interfaces:
+[https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)  
+[https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md)
 
+Given the limited time to implement this projects as well as the fact that the standard is pretty new, and to reuse as much implementation knowledge and effort which has been made available on this new topic so far, the [ERC721Token](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/ERC721/ERC721Token.sol) implementation from OpenZeppelin will be used as a basis for this project.
 
