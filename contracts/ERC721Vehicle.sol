@@ -6,12 +6,13 @@ import "./SupportsInterfaceWithLookup.sol";
 
 
 /**
- * @title ERC721Vehicle for VehicleHistory Log
- * This implementation implements a ERC721 Vehicle Token which shall be used
- * as a basis for a Vihicle Service History Log
+ * @title ERC721Vehicle for Vehicle History Log
+ * This implementation implements a ERC721 Vehicle Token to be used
+ * as a basis for a Vehicle Service History Log
  * https://github.com/SvenMeyer/VehicleHistoryLog/blob/master/README.md
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
+
 contract ERC721Vehicle is ERC721Token {
 
 	// creator of this contract (=vehicle manufaturer) and the only one allowed to mint new vehicle token
@@ -19,31 +20,26 @@ contract ERC721Vehicle is ERC721Token {
 
 	// vehicle token serial numbers will get numbered starting from 1 (we reserve 0 for not existing/allowed)
 	uint internal serial = 0;
-
-	// uint vehicleID; -> tokenId
-	// string make;    -> 
-	// string model;
-	string chassisNumber;
-	string engineNumber;
-
-	// https://github.com/saurfang/ipfs-multihash-on-solidity
-	struct IPFSMultihash {
-		bytes32 digest;
-		uint8 hashFunction;
-		uint8 size;
-	}
+ 
+    string constant ERROR_TOKEN_DOES_NOT_EXIST = "ERROR: Token does not exist.";
+    string constant ERROR_ENTRY_DOES_NOT_EXIST = "ERROR: This entry does not exist.";
 
 	struct LogEntry {
-		uint id;
         uint milage;
-		IPFSMultihash IPFSdocument;
         string description;
+		string documentURI;
     }
 
-	LogEntry[] HistoryLog;
+	// it is not possible to map to a (dynamic) array
+	// the array needs to be wrapped in a struct
+	// https://ethereum.stackexchange.com/questions/12097/creating-dynamic-arrays
+	struct HistoryLog {
+		LogEntry[] structArray;
+	}
 
 	// Mapping from Vehicle (token id) to HistoryLog
-	mapping(uint256 => uint256) internal allTokensIndex;
+	mapping (uint => HistoryLog) historyLogs;
+
 
 
 	/**
@@ -52,6 +48,41 @@ contract ERC721Vehicle is ERC721Token {
 	constructor(string _name, string _symbol) ERC721Token(_name, _symbol) public {
 		creator = msg.sender;
 	}
+
+        
+    function isValidToken(uint _tokenId) internal view returns (bool _valid) {return _tokenId > 0;}
+    
+    // TODO: use pragma experimental ABIEncoderV2
+    // https://ethereum.stackexchange.com/questions/39976/working-with-structs-in-solidity-and-web3js
+    
+    function appendLogEntry(uint _tokenID, uint _milage, string _description, string _documentURI) public returns (uint length) {
+        require(isValidToken(_tokenID), ERROR_TOKEN_DOES_NOT_EXIST);
+        // if there are already entries then the milage must be equal or greater than the previous entry
+        if (historyLogs[_tokenID].structArray.length > 0)
+            require(_milage >= historyLogs[_tokenID].structArray[historyLogs[_tokenID].structArray.length - 1].milage,
+                "ERROR: Milage must be equal or greater than the previous entry.");
+        return historyLogs[_tokenID].structArray.push(LogEntry(_milage, _description, _documentURI));
+    }
+    
+    function getLogEntryCount(uint _tokenID) public view returns (uint length) {
+        require(isValidToken(_tokenID), ERROR_TOKEN_DOES_NOT_EXIST);
+        return historyLogs[_tokenID].structArray.length;
+    }
+
+    function getLogEntryAtIndex(uint _tokenID, uint _index) public view returns(uint _milage, string _description, string _documentURI) {
+        require(isValidToken(_tokenID), ERROR_TOKEN_DOES_NOT_EXIST);
+        require(_index < historyLogs[_tokenID].structArray.length, ERROR_ENTRY_DOES_NOT_EXIST);
+        return (
+            historyLogs[_tokenID].structArray[_index].milage, 
+            historyLogs[_tokenID].structArray[_index].description,
+            historyLogs[_tokenID].structArray[_index].documentURI);
+    }
+    
+    function getLogEntryLast(uint _tokenID) public view returns(uint _milage, string _description, string _documentURI) {
+        require(getLogEntryCount(_tokenID) > 0, "ERROR: tokenId has to be larger than 0");
+        return getLogEntryAtIndex(_tokenID, getLogEntryCount(_tokenID) - 1 );
+    }
+    
 
 	/**
 	* @dev public function to mint a new token for a new car
