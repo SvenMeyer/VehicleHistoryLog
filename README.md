@@ -1,7 +1,7 @@
 # VehicleHistoryLog
 
 ## Motivation
-A vehicle's value is to a great extend determined by the miles driven and the service history. Historically paper-based log books have been used to keep a record, but fraudulent vehicle dealer like to manipulate them to pretend a lower milage and better service history in order to gain a higher price. In addition, blank vehicle service history log books are easily available to everybody on ebay which makes this fraud even easiert to carry out.
+A vehicle's value is to a great extend determined by the miles driven and the service history. Historically paper-based log books have been used to keep a record, but fraudulent vehicle dealer like to manipulate them to pretend a lower milage and better service history in order to gain a higher price. In addition, blank vehicle service history log books are easily available to everybody on ebay which makes this fraud even easier to carry out.
 
 To fix this process a blockchain based system shall be developed.
 Blockchain based system have quite some outstanding features, with most of them being highly desireable for this application:
