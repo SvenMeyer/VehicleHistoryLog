@@ -23,7 +23,23 @@ contract ERC721Vehicle is ERC721Token {
  
     string constant ERROR_TOKEN_DOES_NOT_EXIST = "ERROR: Token does not exist.";
     string constant ERROR_ENTRY_DOES_NOT_EXIST = "ERROR: This entry does not exist.";
+    
+    // Space saving struct for 17 character VIN - Vehicle Identification Number - ISO Standard 3779
+	// and Engine Identification Number (will be used once web3.js with ABIEncoderV2 is fully tested)
+	/*
+		struct VehicleIdNumber {
+		bytes[17] vin;
+		bytes[15] ein;
+	}
+	*/
+		struct VehicleIdNumber {
+		uint vin;
+		uint ein;
+	}
 
+
+    mapping (uint256 => VehicleIdNumber) internal VehicleIdNumbers;
+    
 	struct LogEntry {
         uint milage;
         string description;
@@ -50,7 +66,9 @@ contract ERC721Vehicle is ERC721Token {
 	}
 
         
-    function isValidToken(uint _tokenId) internal view returns (bool _valid) {return _tokenId > 0;}
+    function isValidToken(uint _tokenId) public view returns (bool _valid) {
+		return tokenOwner[_tokenId] != address(0);
+    }
     
     // TODO: use pragma experimental ABIEncoderV2
     // https://ethereum.stackexchange.com/questions/39976/working-with-structs-in-solidity-and-web3js
@@ -88,10 +106,11 @@ contract ERC721Vehicle is ERC721Token {
 	* @dev public function to mint a new token for a new car
 	* @return uint serial number of new vehicle token
 	*/
-	function mintNext() public returns (uint) {
-		require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
+	function mintNewVehicleToken(uint _vin, uint _ein) public returns (uint) {
+		// require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
 		serial += 1;
 		_mint(creator, serial);
+		VehicleIdNumbers[serial] = VehicleIdNumber({vin:_vin, ein:_ein});
 		return serial;
 	}
 
