@@ -1,4 +1,5 @@
 pragma solidity ^0.4.24;
+pragma experimental ABIEncoderV2;
 
 import "./ERC721.sol";
 import "./ERC721Token.sol";
@@ -16,7 +17,7 @@ import "./SupportsInterfaceWithLookup.sol";
 contract ERC721Vehicle is ERC721Token {
 
 	// creator of this contract (=vehicle manufaturer) and the only one allowed to mint new vehicle token
-	address creator;
+	address public creator;
 
 	// vehicle token serial numbers will get numbered starting from 1 (we reserve 0 for not existing/allowed)
 	uint internal serial = 0;
@@ -26,7 +27,7 @@ contract ERC721Vehicle is ERC721Token {
 	/* TYPE DEFINITIONS **************************************** */
     
     // Space saving struct for 17 character VIN - Vehicle Identification Number - ISO Standard 3779
-	// and Engine Identification Number (will be used once web3.js with ABIEncoderV2 is fully tested)
+	// and Engine Identification Number (optimization will be done once initial version is working)
 	/*
 		struct VehicleIdNumber {
 		bytes[17] vin;
@@ -58,12 +59,24 @@ contract ERC721Vehicle is ERC721Token {
 	// Mapping from Vehicle (token id) to HistoryLog
 	mapping (uint => HistoryLog) historyLogs;
 
+	/* EVENTS   **************************************** */
+	event NewVehicleToken(uint indexed tokenId);
+	event NewLogEntry(uint indexed tokenId);
+    event ForSale(uint indexed tokenId);
+    event Sold(uint indexed tokenId);
+//  event Shipped(uint indexed tokenId);
+    event Received(uint indexed tokenId);
+	event VehicleBurnt(uint indexed tokenId);
+
 	/* FUNCTIONS **************************************** */
 
 	/**
 	 * @dev Constructor function
 	 */
-	constructor(string _name, string _symbol) ERC721Token(_name, _symbol) public {
+	// constructor(string _name, string _symbol) ERC721Token(_name, _symbol) public {
+	// call constructor of super class/contract with parameter
+	// TODO: accept parameter from deployer	
+	constructor () ERC721Token("Porsche","POR") public {
 		creator = msg.sender;
 	}
        
@@ -91,7 +104,8 @@ contract ERC721Vehicle is ERC721Token {
         if (historyLogs[_tokenId].structArray.length > 0)
             require(_milage >= historyLogs[_tokenId].structArray[historyLogs[_tokenId].structArray.length - 1].milage,
                 "ERROR: Milage must be equal or greater than the previous entry.");
-        return historyLogs[_tokenId].structArray.push(LogEntry({milage:_milage, auditor: msg.sender, description: _description, documentURI: _documentURI}));
+		emit NewLogEntry(_tokenId);
+        return historyLogs[_tokenId].structArray.push(LogEntry({auditor: msg.sender, milage:_milage, description: _description, documentURI: _documentURI}));
     }
     
     function getLogEntryCount(uint _tokenId) public view
@@ -104,11 +118,12 @@ contract ERC721Vehicle is ERC721Token {
 
     function getLogEntryAtIndex(uint _tokenId, uint _index) public view 
 		onlyValidToken(_tokenId)
-		returns(uint _milage, string _description, string _documentURI)
+		returns(address _auditor, uint _milage, string _description, string _documentURI)
 	{
         // require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
         require(_index < historyLogs[_tokenId].structArray.length, ERROR_ENTRY_DOES_NOT_EXIST);
         return (
+			historyLogs[_tokenId].structArray[_index].auditor,
             historyLogs[_tokenId].structArray[_index].milage, 
             historyLogs[_tokenId].structArray[_index].description,
             historyLogs[_tokenId].structArray[_index].documentURI);
@@ -116,7 +131,7 @@ contract ERC721Vehicle is ERC721Token {
     
     function getLogEntryLast(uint _tokenId) public view
 		onlyValidToken(_tokenId)
-		returns(uint _milage, string _description, string _documentURI)
+		returns(address _auditor, uint _milage, string _description, string _documentURI)
 	{
         // require(getLogEntryCount(_tokenId) > 0, "ERROR: tokenId has to be larger than 0");
         return getLogEntryAtIndex(_tokenId, getLogEntryCount(_tokenId) - 1 );
@@ -132,6 +147,7 @@ contract ERC721Vehicle is ERC721Token {
 		serial += 1;
 		_mint(creator, serial);
 		VehicleIdNumbers[serial] = VehicleIdNumber({vin:_vin, ein:_ein});
+		emit NewVehicleToken(serial);
 		return serial;
 	}
 
@@ -142,4 +158,23 @@ contract ERC721Vehicle is ERC721Token {
 	function getLastSerial() public view returns (uint) {
 		return serial;
 	}
+
+	/* EXPERIMENTAL ********** */
+
+	function getLogStructAtIndex(uint _tokenId, uint _index) public view 
+		onlyValidToken(_tokenId)
+		returns(LogEntry)
+	{
+        // require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
+        require(_index < historyLogs[_tokenId].structArray.length, ERROR_ENTRY_DOES_NOT_EXIST);
+        return (historyLogs[_tokenId].structArray[_index]);
+    }
+    
+    function getLogStructLast(uint _tokenId) public view
+		onlyValidToken(_tokenId)
+		returns(LogEntry)
+	{
+        // require(getLogEntryCount(_tokenId) > 0, "ERROR: tokenId has to be larger than 0");
+        return getLogStructAtIndex(_tokenId, getLogEntryCount(_tokenId) - 1 );
+    }
 }
