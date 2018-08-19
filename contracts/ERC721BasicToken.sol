@@ -21,6 +21,7 @@ contract ERC721BasicToken is SupportsInterfaceWithLookup, ERC721Basic {
   bytes4 private constant ERC721_RECEIVED = 0x150b7a02;
 
   // Mapping from token ID to owner
+  // The standard says that tokens can’t belong to the zero address (0x0)
   mapping (uint256 => address) internal tokenOwner;
 
   // Mapping from token ID to approved address

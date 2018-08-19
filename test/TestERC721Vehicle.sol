@@ -12,14 +12,15 @@ contract TestERC721Vehicle {
 	// Test to add first item
 
     function testMintNewVehicleToken() public {
+        // https://ethereum.stackexchange.com/questions/4467/initialising-structs-to-storage-variables
         // VehicleIdNumber memory v1 = VehicleIdNumber(1001, 2001);
         // VehicleIdNumber memory v2 = VehicleIdNumber({vin:1002, ein:2002});
 
-        // uint ser1 = vc.mintNewVehicleToken(v1.vin, v1.ein);
-        uint ser1 = vc.mintNewVehicleToken(1001, 2001);
-        Assert.equal(ser1, 1, "serial of first vehicle should be 1");
-        uint ser2 = vc.mintNewVehicleToken(1002, 2002);
-        Assert.equal(ser2, 2, "serial of second vehicle should be 2");
+        // uint tokenId_1 = vc.mintNewVehicleToken(v1.vin, v1.ein);
+        uint tokenId_1 = vc.mintNewVehicleToken(1001, 2001);
+        Assert.equal(tokenId_1, 1, "tokenId of first vehicle should be 1");
+        uint tokenId_2 = vc.mintNewVehicleToken(1002, 2002);
+        Assert.equal(tokenId_2, 2, "tokenId of second vehicle should be 2");
     }
 
     function testGetLastSerial() public {
