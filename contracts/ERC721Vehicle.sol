@@ -21,8 +21,9 @@ contract ERC721Vehicle is ERC721Token {
 	// vehicle token serial numbers will get numbered starting from 1 (we reserve 0 for not existing/allowed)
 	uint internal serial = 0;
  
-    string constant ERROR_TOKEN_DOES_NOT_EXIST = "ERROR: Token does not exist.";
     string constant ERROR_ENTRY_DOES_NOT_EXIST = "ERROR: This entry does not exist.";
+
+	/* TYPE DEFINITIONS **************************************** */
     
     // Space saving struct for 17 character VIN - Vehicle Identification Number - ISO Standard 3779
 	// and Engine Identification Number (will be used once web3.js with ABIEncoderV2 is fully tested)
@@ -41,7 +42,8 @@ contract ERC721Vehicle is ERC721Token {
     mapping (uint256 => VehicleIdNumber) internal VehicleIdNumbers;
     
 	struct LogEntry {
-        uint milage;
+		address auditor;
+		uint milage;
         string description;
 		string documentURI;
     }
@@ -56,7 +58,7 @@ contract ERC721Vehicle is ERC721Token {
 	// Mapping from Vehicle (token id) to HistoryLog
 	mapping (uint => HistoryLog) historyLogs;
 
-
+	/* FUNCTIONS **************************************** */
 
 	/**
 	 * @dev Constructor function
@@ -64,41 +66,60 @@ contract ERC721Vehicle is ERC721Token {
 	constructor(string _name, string _symbol) ERC721Token(_name, _symbol) public {
 		creator = msg.sender;
 	}
-
-        
+       
     function isValidToken(uint _tokenId) public view returns (bool _valid) {
-		return tokenOwner[_tokenId] != address(0);
+		return (_tokenId > 0) && (tokenOwner[_tokenId] != address(0));
     }
+
+	modifier onlyValidToken(uint _tokenId) {
+		require(isValidToken(_tokenId), "ERROR: Token does not exist.");
+		_;
+	}
     
     // TODO: use pragma experimental ABIEncoderV2
     // https://ethereum.stackexchange.com/questions/39976/working-with-structs-in-solidity-and-web3js
     
-    function appendLogEntry(uint _tokenID, uint _milage, string _description, string _documentURI) public returns (uint length) {
-        require(isValidToken(_tokenID), ERROR_TOKEN_DOES_NOT_EXIST);
+    function appendLogEntry(uint _tokenId, uint _milage, string _description, string _documentURI) public 
+		onlyValidToken(_tokenId)
+		returns (uint length)
+	{
+        // require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
+		require(msg.sender == ownerOf(_tokenId) ||
+				msg.sender == creator ||
+				msg.sender == getApproved(_tokenId));
         // if there are already entries then the milage must be equal or greater than the previous entry
-        if (historyLogs[_tokenID].structArray.length > 0)
-            require(_milage >= historyLogs[_tokenID].structArray[historyLogs[_tokenID].structArray.length - 1].milage,
+        if (historyLogs[_tokenId].structArray.length > 0)
+            require(_milage >= historyLogs[_tokenId].structArray[historyLogs[_tokenId].structArray.length - 1].milage,
                 "ERROR: Milage must be equal or greater than the previous entry.");
-        return historyLogs[_tokenID].structArray.push(LogEntry(_milage, _description, _documentURI));
+        return historyLogs[_tokenId].structArray.push(LogEntry({milage:_milage, auditor: msg.sender, description: _description, documentURI: _documentURI}));
     }
     
-    function getLogEntryCount(uint _tokenID) public view returns (uint length) {
-        require(isValidToken(_tokenID), ERROR_TOKEN_DOES_NOT_EXIST);
-        return historyLogs[_tokenID].structArray.length;
+    function getLogEntryCount(uint _tokenId) public view
+		onlyValidToken(_tokenId)
+		returns (uint length)
+	{
+        // require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
+        return historyLogs[_tokenId].structArray.length;
     }
 
-    function getLogEntryAtIndex(uint _tokenID, uint _index) public view returns(uint _milage, string _description, string _documentURI) {
-        require(isValidToken(_tokenID), ERROR_TOKEN_DOES_NOT_EXIST);
-        require(_index < historyLogs[_tokenID].structArray.length, ERROR_ENTRY_DOES_NOT_EXIST);
+    function getLogEntryAtIndex(uint _tokenId, uint _index) public view 
+		onlyValidToken(_tokenId)
+		returns(uint _milage, string _description, string _documentURI)
+	{
+        // require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
+        require(_index < historyLogs[_tokenId].structArray.length, ERROR_ENTRY_DOES_NOT_EXIST);
         return (
-            historyLogs[_tokenID].structArray[_index].milage, 
-            historyLogs[_tokenID].structArray[_index].description,
-            historyLogs[_tokenID].structArray[_index].documentURI);
+            historyLogs[_tokenId].structArray[_index].milage, 
+            historyLogs[_tokenId].structArray[_index].description,
+            historyLogs[_tokenId].structArray[_index].documentURI);
     }
     
-    function getLogEntryLast(uint _tokenID) public view returns(uint _milage, string _description, string _documentURI) {
-        require(getLogEntryCount(_tokenID) > 0, "ERROR: tokenId has to be larger than 0");
-        return getLogEntryAtIndex(_tokenID, getLogEntryCount(_tokenID) - 1 );
+    function getLogEntryLast(uint _tokenId) public view
+		onlyValidToken(_tokenId)
+		returns(uint _milage, string _description, string _documentURI)
+	{
+        // require(getLogEntryCount(_tokenId) > 0, "ERROR: tokenId has to be larger than 0");
+        return getLogEntryAtIndex(_tokenId, getLogEntryCount(_tokenId) - 1 );
     }
     
 
