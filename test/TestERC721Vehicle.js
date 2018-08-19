@@ -1,3 +1,4 @@
+// import "truffle/DeployedAddresses.sol";
 const ERC721Vehicle = artifacts.require('ERC721Vehicle');
 
 contract('ERC721Vehicle', function(accounts) {
@@ -8,33 +9,46 @@ contract('ERC721Vehicle', function(accounts) {
     const service = accounts[3];
     const emptyAddress = '0x0000000000000000000000000000000000000000';
 
+	// vc = ERC721Vehicle(DeployedAddresses.ERC721Vehicle());
 	var vc;
-    var tokenId;
+	var tokenId;
+	// web3 1.0 it might change to web3.utils.fromWei
 	const price = web3.toWei(100, "ether");
 
-	it("sets a contract creator", async () => {
+	it("deploys contract & sets a contract creator", async () => {
 		vc = await ERC721Vehicle.deployed()
 		assert.equal(await vc.creator.call(), creator)
 	});
 
 	it("should mint a ERC721 token for a new car", async () => {
-		// const vc = await ERC721Vehicle.deployed()
-
 		var eventEmitted = false
-
 		var event = vc.NewVehicleToken()
 		await event.watch((err, res) => {
-			tokenId = res.args.tokenId.toString(10)
+			// tokenId = res.args.tokenId.toString(10) // ???
 			eventEmitted = true
 		})
 
-		const name = "Porsche 911"
+		await vc.mintNewVehicleToken(1001, 2001, { from: creator });
+		assert.equal(await vc.getLastSerial.call(), 1, "the serial number of the last created vehicle token should be 1")
+	})
 
-		await vc.mintNewVehicleToken(1001, 2001); //, { from: alice })
+	it("should add an HistoryLog entry", async () => {
+		const tokenId = 1;
+		assert.equal(await vc.getLogEntryCount(tokenId), 0, "getLogEntryCount should be 0");
+		const milage = 10;
+		const description = "out of the factory";
+		const URI = "https://documents.com/entry-1234.pdf";
+		const length = vc.appendLogEntry(tokenId, milage, description, URI, { from: creator })
+		assert.equal(await vc.getLogEntryCount(tokenId), 1, "getLogEntryCount should be 1");
+		const result = await vc.getLogEntryLast.call(1);
+		console.log({result});
+		assert.equal(result[0], creator, 'auditor of first entry should be creator');
+		assert.equal(result[1].toNumber(), milage, 'the price of the last added item does not match the expected value')
+		assert.equal(result[2], description, "description should match the parameter at creation time");
+		assert.equal(result[3], URI, "URI should match the parameter at creation time");
+	})
+});
 
-		const serial = await vc.getLastSerial.call()
-
-		assert.equal(serial, 1, "the serial number of the last created vehicle token should be 1")
 /*
 		assert.equal(result[0], name, 'the name of the last added item does not match the expected value')
 		assert.equal(result[2].toString(10), price, 'the price of the last added item does not match the expected value')
@@ -43,9 +57,6 @@ contract('ERC721Vehicle', function(accounts) {
 		assert.equal(result[5], emptyAddress, 'the buyer address should be set to 0 when an item is added')
 		assert.equal(eventEmitted, true, 'adding an item should emit a For Sale event')
 */
-	})
-});
-
 
 /* OLD ------------------------------------------------ */
 /*	
@@ -64,7 +75,7 @@ contract('ERC721Vehicle', function(accounts) {
 
         await ERC721Vehicle.addItem(name, price, {from: alice})
 
-        const result = await ERC721Vehicle.fetchItem.call(tokenId)
+        const result = await ERC721Vehicle.getLogEntryLast.call(tokenId)
 
         assert.equal(result[0], name, 'the name of the last added item does not match the expected value')
         assert.equal(result[2].toString(10), price, 'the price of the last added item does not match the expected value')
