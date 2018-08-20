@@ -1,6 +1,7 @@
 // import "truffle/DeployedAddresses.sol";
 const ERC721Vehicle = artifacts.require('ERC721Vehicle');
 
+// describe('ERC721Vehicle', (accounts) => {
 contract('ERC721Vehicle', function(accounts) {
 
     const creator = accounts[0];
@@ -16,7 +17,9 @@ contract('ERC721Vehicle', function(accounts) {
 	const price = web3.toWei(100, "ether");
 
 	it("deploys contract & sets a contract creator", async () => {
-		vc = await ERC721Vehicle.deployed()
+		vc = await ERC721Vehicle.new({ from: creator })
+		// if it has been deployed successfully then it should have an address
+		assert.ok(await vc.address);
 		assert.equal(await vc.creator.call(), creator)
 	});
 
