@@ -41,7 +41,7 @@ contract ERC721Vehicle is ERC721Token {
 	}
 
 	// for tokenId get VehicleData
-    mapping (uint256 => VehicleData) internal VehicleDataStore;
+    mapping (uint256 => VehicleData) internal vehicleDataStore;
     
 	struct LogEntry {
 		address auditor;
@@ -147,7 +147,7 @@ contract ERC721Vehicle is ERC721Token {
 		// require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
 		serial += 1;
 		_mint(creator, serial);
-		VehicleDataStore[serial] = VehicleData({model: _model, vin:_vin, ein:_ein});
+		vehicleDataStore[serial] = VehicleData({model: _model, vin:_vin, ein:_ein});
 		emit NewVehicleToken(serial);
 		return serial;
 	}
@@ -160,16 +160,23 @@ contract ERC721Vehicle is ERC721Token {
 		return serial;
 	}
 
-	/* EXPERIMENTAL - needs ABIencideV2 ********** */
-
 	function getVehicleData(uint _tokenId) public view 
+		onlyValidToken(_tokenId)
+		returns(bytes32 model, bytes32 vin, bytes32 ein)
+	{
+		return(vehicleDataStore[_tokenId].model, vehicleDataStore[_tokenId].vin, vehicleDataStore[_tokenId].ein);
+	}
+
+	/* EXPERIMENTAL - needs ABIencoderV2 ********** */
+
+	function getVehicleData_Struct(uint _tokenId) public view 
 		onlyValidToken(_tokenId)
 		returns(VehicleData)
 	{
-		return VehicleDataStore[_tokenId];
+		return vehicleDataStore[_tokenId];
 	}
 
-	function getLogStructAtIndex(uint _tokenId, uint _index) public view 
+	function getLogAtIndex_Struct(uint _tokenId, uint _index) public view 
 		onlyValidToken(_tokenId)
 		returns(LogEntry)
 	{
@@ -178,11 +185,11 @@ contract ERC721Vehicle is ERC721Token {
         return (historyLogs[_tokenId].structArray[_index]);
     }
     
-    function getLogStructLast(uint _tokenId) public view
+    function getLogLast_Struct(uint _tokenId) public view
 		onlyValidToken(_tokenId)
 		returns(LogEntry)
 	{
         // require(getLogEntryCount(_tokenId) > 0, "ERROR: tokenId has to be larger than 0");
-        return getLogStructAtIndex(_tokenId, getLogEntryCount(_tokenId) - 1 );
+        return getLogAtIndex_Struct(_tokenId, getLogEntryCount(_tokenId) - 1 );
     }
 }

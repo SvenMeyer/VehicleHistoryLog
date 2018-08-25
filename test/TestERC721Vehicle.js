@@ -11,15 +11,19 @@ contract('ERC721Vehicle', function(accounts) {
     const emptyAddress = '0x0000000000000000000000000000000000000000';
 
     const tokenId = 1;
-    const model = 'Porsche Cayenne'
-    const vid = 'WP1AB29P64LA63732'
-    const eid = 'AFD'
+    const model = '2' // 'Porsche Cayenne'
+    const vin = 'WP1AB29P64LA63732'
+    const ein = 'AFD'
 
 	// vc = ERC721Vehicle(DeployedAddresses.ERC721Vehicle());
 	var vc;
 
 	// web3 1.0 it might change to web3.utils.fromWei
-	const price = web3.toWei(100, "ether");
+    const price = web3.toWei(100, "ether");
+    
+    it("web3.fromUtf8 > web3.toUtf8 should result in identical value", () => {
+        assert.equal(model, web3.toUtf8(web3.fromUtf8(model)))
+    });
 
 	it("deploys contract & sets a contract creator", async () => {
 		vc = await ERC721Vehicle.new({ from: creator })
@@ -36,7 +40,9 @@ contract('ERC721Vehicle', function(accounts) {
 			eventEmitted = true
 		})
 
-        await vc.mintNewVehicleToken(model , vid,  eid, { from: creator });
+        // convert parameter to bytes32
+        // https://ethereum.stackexchange.com/questions/23058/web3-return-bytes32-string
+        await vc.mintNewVehicleToken(web3.fromUtf8(model), web3.fromUtf8(vin), web3.fromUtf8(ein), { from: creator });
 		assert.equal(await vc.getLastSerial.call(), 1, "the serial number of the last created vehicle token should be 1")
 	})
 
@@ -48,17 +54,26 @@ contract('ERC721Vehicle', function(accounts) {
 		const length = vc.appendLogEntry(tokenId, milage, description, URI, { from: creator })
 		assert.equal(await vc.getLogEntryCount(tokenId), 1, "getLogEntryCount should be 1");
 		const result = await vc.getLogEntryLast.call(1);
-		console.log({result});
 		assert.equal(result[0], creator, 'auditor of first entry should be creator');
 		assert.equal(result[1].toNumber(), milage, 'the price of the last added item does not match the expected value')
 		assert.equal(result[2], description, "description should match the parameter at creation time");
 		assert.equal(result[3], URI, "URI should match the parameter at creation time");
     })
+
+    it("should get getVehicleData", async () => {
+        result = await vc.getVehicleData(tokenId);
+        // toAscii does not work as it will convert trailing '00' to \0000
+        assert.equal(web3.toUtf8(result[0]), model, "retrieved getVehicleData.vin not identical with stored vin")
+        assert.equal(web3.toUtf8(result[1]), vin, "retrieved getVehicleData.vin not identical with stored vin")
+        assert.equal(web3.toUtf8(result[2]), ein, "retrieved getVehicleData.ein not identical with stored ein")
+    })
     
     // needs web3@1.0.0 ABIencoderV2
+    // truffle does not support web3 >= 1.0.0 (just) not yet
+    // https://github.com/ethereum/web3.js/issues/1241
     /*
-    it("should get getVehicleData", async () => {
-        const vehicleData = await vc.getVehicleData(tokenId);
+    it("should get getVehicleData_Struct", async () => {
+        const vehicleData = await vc.getVehicleData_Sruct(tokenId);
         console.log(vehicleData);
     })
     */
