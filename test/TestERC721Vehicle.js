@@ -10,13 +10,14 @@ contract('ERC721Vehicle', function(accounts) {
     const service = accounts[3];
     const emptyAddress = '0x0000000000000000000000000000000000000000';
 
+    const tokenId = 1;
     const model = 'Porsche Cayenne'
     const vid = 'WP1AB29P64LA63732'
     const eid = 'AFD'
 
 	// vc = ERC721Vehicle(DeployedAddresses.ERC721Vehicle());
 	var vc;
-	var tokenId;
+
 	// web3 1.0 it might change to web3.utils.fromWei
 	const price = web3.toWei(100, "ether");
 
@@ -40,7 +41,6 @@ contract('ERC721Vehicle', function(accounts) {
 	})
 
 	it("should add an HistoryLog entry", async () => {
-		const tokenId = 1;
 		assert.equal(await vc.getLogEntryCount(tokenId), 0, "getLogEntryCount should be 0");
 		const milage = 10;
 		const description = "out of the factory";
@@ -53,7 +53,12 @@ contract('ERC721Vehicle', function(accounts) {
 		assert.equal(result[1].toNumber(), milage, 'the price of the last added item does not match the expected value')
 		assert.equal(result[2], description, "description should match the parameter at creation time");
 		assert.equal(result[3], URI, "URI should match the parameter at creation time");
-	})
+    })
+    
+    it("should get getVehicleData", async () => {
+        const vehicleData = await vc.getVehicleData(tokenId);
+        console.log(vehicleData);
+    })
 });
 
 /*

@@ -160,7 +160,14 @@ contract ERC721Vehicle is ERC721Token {
 		return serial;
 	}
 
-	/* EXPERIMENTAL ********** */
+	/* EXPERIMENTAL - needs ABIencideV2 ********** */
+
+	function getVehicleData(uint _tokenId) public view 
+		onlyValidToken(_tokenId)
+		returns(VehicleData)
+	{
+		return VehicleDataStore[_tokenId];
+	}
 
 	function getLogStructAtIndex(uint _tokenId, uint _index) public view 
 		onlyValidToken(_tokenId)
