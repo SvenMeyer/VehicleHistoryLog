@@ -55,10 +55,13 @@ contract('ERC721Vehicle', function(accounts) {
 		assert.equal(result[3], URI, "URI should match the parameter at creation time");
     })
     
+    // needs web3@1.0.0 ABIencoderV2
+    /*
     it("should get getVehicleData", async () => {
         const vehicleData = await vc.getVehicleData(tokenId);
         console.log(vehicleData);
     })
+    */
 });
 
 /*
