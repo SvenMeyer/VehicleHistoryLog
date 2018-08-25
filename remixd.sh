@@ -1,2 +1,8 @@
 # make local folder accessible to Remix
-remixd -s /home/sum/DEV/VehicleHistoryLog
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+# echo "service local directory : ", $SCRIPTPATH
+
+remixd -s $SCRIPTPATH
+

@@ -10,6 +10,10 @@ contract('ERC721Vehicle', function(accounts) {
     const service = accounts[3];
     const emptyAddress = '0x0000000000000000000000000000000000000000';
 
+    const model = 'Porsche Cayenne'
+    const vid = 'WP1AB29P64LA63732'
+    const eid = 'AFD'
+
 	// vc = ERC721Vehicle(DeployedAddresses.ERC721Vehicle());
 	var vc;
 	var tokenId;
@@ -31,7 +35,7 @@ contract('ERC721Vehicle', function(accounts) {
 			eventEmitted = true
 		})
 
-		await vc.mintNewVehicleToken(1001, 2001, { from: creator });
+        await vc.mintNewVehicleToken(model , vid,  eid, { from: creator });
 		assert.equal(await vc.getLastSerial.call(), 1, "the serial number of the last created vehicle token should be 1")
 	})
 

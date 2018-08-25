@@ -19,28 +19,29 @@ contract ERC721Vehicle is ERC721Token {
 	// creator of this contract (=vehicle manufaturer) and the only one allowed to mint new vehicle token
 	address public creator;
 
-	// vehicle token serial numbers will get numbered starting from 1 (we reserve 0 for not existing/allowed)
-	uint internal serial = 0;
+	// vehicle token serial numbers (=tokenId) will get numbered starting from 1 (we reserve 0 for not existing/allowed)
+	uint internal serial = 0; // = tokenId
  
     string constant ERROR_ENTRY_DOES_NOT_EXIST = "ERROR: This entry does not exist.";
 
 	/* TYPE DEFINITIONS **************************************** */
-    
-    // Space saving struct for 17 character VIN - Vehicle Identification Number - ISO Standard 3779
-	// and Engine Identification Number (optimization will be done once initial version is working)
-	/*
-		struct VehicleIdNumber {
-		bytes[17] vin;
-		bytes[15] ein;
-	}
-	*/
-		struct VehicleIdNumber {
-		uint vin;
-		uint ein;
+
+	/**
+	 * @dev Struct to store data about vehivle
+	 * @param model : model id of vehicle [max 32 char]
+	 * @param vin : Vehicle Identification Number - ISO Standard 3779 [17 char]
+	 * @param ein : Engine Identification Number [max 32 char]
+	 */
+	struct VehicleData {
+		bytes32 model;
+		bytes32 vin;
+		bytes32 ein;
+		// string  imageURI;
+		// string  documentURI;
 	}
 
-
-    mapping (uint256 => VehicleIdNumber) internal VehicleIdNumbers;
+	// for tokenId get VehicleData
+    mapping (uint256 => VehicleData) internal VehicleDataStore;
     
 	struct LogEntry {
 		address auditor;
@@ -142,11 +143,11 @@ contract ERC721Vehicle is ERC721Token {
 	* @dev public function to mint a new token for a new car
 	* @return uint serial number of new vehicle token
 	*/
-	function mintNewVehicleToken(uint _vin, uint _ein) public returns (uint) {
+	function mintNewVehicleToken(bytes32 _model, bytes32 _vin, bytes32 _ein) public returns (uint) {
 		// require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
 		serial += 1;
 		_mint(creator, serial);
-		VehicleIdNumbers[serial] = VehicleIdNumber({vin:_vin, ein:_ein});
+		VehicleDataStore[serial] = VehicleData({model: _model, vin:_vin, ein:_ein});
 		emit NewVehicleToken(serial);
 		return serial;
 	}
