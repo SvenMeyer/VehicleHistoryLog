@@ -16,6 +16,17 @@ import "./SupportsInterfaceWithLookup.sol";
 
 contract ERC721Vehicle is ERC721Token {
 
+	// simple functions for testing
+	uint storedData;
+
+	function set(uint x) public {
+		storedData = x;
+	}
+
+	function get() public view returns (uint) {
+		return storedData;
+	}
+
 	// creator of this contract (=vehicle manufaturer) and the only one allowed to mint new vehicle token
 	address public creator;
 

@@ -22,9 +22,9 @@
 // require('@babel/register')
 // require('@babel/polyfill')
 
-// var HDWalletProvider = require('truffle-hdwallet-provider')
+var HDWalletProvider = require('truffle-hdwallet-provider')
 
-// var mnemonic = process.env.HDWALLET_MNEMONIC
+var mnemonic = process.env.HDWALLET_MNEMONIC
 
 // local default test wallet
 // var mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
@@ -43,6 +43,18 @@ module.exports = {
       host: 'localhost',
       port: 9545,
       network_id: '*' // Match any network id
+    },
+    ropsten: {
+      provider: new HDWalletProvider(mnemonic, process.env.ROPSTEN_PROVIDER_URL),
+      network_id: 3,
+      gas: 4612388,
+      gasPrice: 100000000000
+    },
+    rinkeby: {
+      provider: new HDWalletProvider(mnemonic, process.env.RINKEBY_PROVIDER_URL),
+      network_id: 4,
+      gas: 4612388,
+      gasPrice: 100000000000
     }
   },
 
