@@ -1,5 +1,5 @@
 #! /bin/sh
-export HDWALLET_MNEMONIC="candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+# export HDWALLET_MNEMONIC="candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
 echo "starting with HDWALLET_MNEMONIC : "
 echo $HDWALLET_MNEMONIC
 # -i or --networkId: Specify the network id ganache-cli will use to identify itself
