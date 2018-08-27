@@ -1,10 +1,11 @@
 pragma solidity ^0.4.24;
 pragma experimental ABIEncoderV2; // currently gives a warning, but required when passing structs to web3@1.0.0
 
-import "./ERC721.sol";
-import "./ERC721Token.sol";
-import "./SupportsInterfaceWithLookup.sol";
+// import "./ERC721.sol";
+// import "./SupportsInterfaceWithLookup.sol";
 
+import "./ERC721Token.sol"; // use a local copy for easier work with Remix
+// import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 
 /**
  * @title ERC721Vehicle for Vehicle History Log
@@ -89,7 +90,7 @@ contract ERC721Vehicle is ERC721Token {
 //  event Shipped(uint indexed tokenId);
 	event Received(uint indexed tokenId);
 	event VehicleBurnt(uint indexed tokenId);
-	event DepositReceived(address sender, uint value);
+	event LogDepositReceived(address sender, uint value);
 
 	/* FUNCTIONS **************************************** */
 
@@ -103,8 +104,8 @@ contract ERC721Vehicle is ERC721Token {
 		creator = msg.sender;
 	}
 
-	function LogDepositReceived(address sender, uint value) internal {
-		emit DepositReceived(sender, value);
+	function logDepositReceived(address sender, uint value) internal {
+		emit LogDepositReceived(sender, value);
 	}
 	   
 	function isValidToken(uint _tokenId) public view returns (bool _valid) {
@@ -123,7 +124,6 @@ contract ERC721Vehicle is ERC721Token {
 		onlyValidToken(_tokenId)
 		returns (uint length)
 	{
-		// require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
 		require(msg.sender == ownerOf(_tokenId) ||
 				msg.sender == creator ||
 				msg.sender == getApproved(_tokenId));
@@ -139,7 +139,6 @@ contract ERC721Vehicle is ERC721Token {
 		onlyValidToken(_tokenId)
 		returns (uint length)
 	{
-		// require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
 		return historyLogs[_tokenId].structArray.length;
 	}
 
@@ -147,7 +146,6 @@ contract ERC721Vehicle is ERC721Token {
 		onlyValidToken(_tokenId)
 		returns(address _auditor, uint _milage, string _description, string _documentURI)
 	{
-		// require(isValidToken(_tokenId), ERROR_TOKEN_DOES_NOT_EXIST);
 		require(_index < historyLogs[_tokenId].structArray.length, ERROR_ENTRY_DOES_NOT_EXIST);
 		return (
 			historyLogs[_tokenId].structArray[_index].auditor,
@@ -170,7 +168,7 @@ contract ERC721Vehicle is ERC721Token {
 	* @return uint serial number of new vehicle token
 	*/
 	function mintNewVehicleToken(bytes32 _model, bytes32 _vin, bytes32 _ein) public returns (uint) {
-		// require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
+		require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
 		serial += 1;
 		_mint(creator, serial);
 		vehicleDataStore[serial] = VehicleData({model: _model, vin:_vin, ein:_ein});
@@ -297,9 +295,20 @@ contract ERC721Vehicle is ERC721Token {
 	}
 
 
-	// fallback function if somebody wants to donate to the contract
-	function() payable { 
-		require(msg.data.length == 0);
-		LogDepositReceived(msg.sender, msg.value);
+	// fallback function : if ETH is send without data,
+	// then it is a plain payment, we keep it and emit an event
+	function() public payable {
+		if(stopped) {
+			revert('Contract is stopped. No payments possible.');
+		}
+		require(msg.data.length == 0, 'fallback function only accepts funding without any data payload');
+		logDepositReceived(msg.sender, msg.value);
+	}
+
+	// creator of contract is allowed to destroy the contract and receive all funds
+	function kill() public {
+		if(msg.sender == creator) {
+			selfdestruct(creator);
+		}
 	}
 }
