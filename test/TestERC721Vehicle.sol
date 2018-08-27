@@ -34,17 +34,16 @@ contract TestERC721Vehicle {
     }
     
 	// Test to mint 2 new token = 2 new vehicles
+    string constant model_1 = 'Cayenne';
+    string constant vin_1   = 'WP1AA2A24CLA09461';
+    string constant ein_1   = 'AFD';
+    string constant model_2 = 'Cayenne Turbo';
+    string constant vin_2   = 'WP1AA2A26ELA09612';
+    string constant ein_2   = 'BFD';
 
     function testMintNewVehicleToken() public {
-        bytes32 model_1 = 'Cayenne';
-		bytes32 vin_1   = 'WP1AA2A24CLA09461';
-		bytes32 ein_1   = 'AFD';
         uint tokenId_1 = vc.mintNewVehicleToken(model_1, vin_1, ein_1);
         Assert.equal(tokenId_1, 1, "tokenId of first vehicle should be 1");
-
-        bytes32 model_2 = 'Cayenne Turbo';
-		bytes32 vin_2   = 'WP1AA2A26ELA09612';
-		bytes32 ein_2   = 'BFD';
         uint tokenId_2 = vc.mintNewVehicleToken(model_2, vin_2, ein_2);
         Assert.equal(tokenId_2, 2, "tokenId of second vehicle should be 2");
     // }

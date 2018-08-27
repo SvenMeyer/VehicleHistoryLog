@@ -55,9 +55,9 @@ contract ERC721Vehicle is ERC721Token {
 	 * @param ein : Engine Identification Number [max 32 char]
 	 */
 	struct VehicleData {
-		bytes32 model;
-		bytes32 vin;
-		bytes32 ein;
+		string model;
+		string vin;
+		string ein;
 		// string  imageURI;
 		// string  documentURI;
 	}
@@ -83,14 +83,14 @@ contract ERC721Vehicle is ERC721Token {
 	mapping (uint => HistoryLog) historyLogs;
 
 	/* EVENTS   **************************************** */
-	event NewVehicleToken(uint indexed tokenId);
-	event NewLogEntry(uint indexed tokenId);
-	event ForSale(uint indexed tokenId);
-	event Sold(uint indexed tokenId);
-//  event Shipped(uint indexed tokenId);
-	event Received(uint indexed tokenId);
-	event VehicleBurnt(uint indexed tokenId);
-	event LogDepositReceived(address sender, uint value);
+	event EventNewVehicleToken(uint indexed tokenId);
+	event EventNewLogEntry(uint indexed tokenId);
+	event EventForSale(uint indexed tokenId);
+	event EventSold(uint indexed tokenId);
+//  event EventShipped(uint indexed tokenId);
+	event EventReceived(uint indexed tokenId);
+	event EventVehicleBurnt(uint indexed tokenId);
+	event EventDepositReceived(address sender, uint value);
 
 	/* FUNCTIONS **************************************** */
 
@@ -105,7 +105,7 @@ contract ERC721Vehicle is ERC721Token {
 	}
 
 	function logDepositReceived(address sender, uint value) internal {
-		emit LogDepositReceived(sender, value);
+		emit EventDepositReceived(sender, value);
 	}
 	   
 	function isValidToken(uint _tokenId) public view returns (bool _valid) {
@@ -131,7 +131,7 @@ contract ERC721Vehicle is ERC721Token {
 		if (historyLogs[_tokenId].structArray.length > 0)
 			require(_milage >= historyLogs[_tokenId].structArray[historyLogs[_tokenId].structArray.length - 1].milage,
 				"ERROR: Milage must be equal or greater than the previous entry.");
-		emit NewLogEntry(_tokenId);
+		emit EventNewLogEntry(_tokenId);
 		return historyLogs[_tokenId].structArray.push(LogEntry({auditor: msg.sender, milage:_milage, description: _description, documentURI: _documentURI}));
 	}
 	
@@ -166,13 +166,21 @@ contract ERC721Vehicle is ERC721Token {
 	/**
 	* @dev public function to mint a new token for a new car
 	* @return uint serial number of new vehicle token
+	* @param  _model string : name of the vehicle model (max 31 low-level bytes of the UTF-8 representation)
+	* @param  _vin string : vehicle identification number (max 31 low-level bytes of the UTF-8 representation)
+	* @param  _ein string : engine identification number (max 31 low-level bytes of the UTF-8 representation)
+	* @return uint serial : new tokenId
 	*/
-	function mintNewVehicleToken(bytes32 _model, bytes32 _vin, bytes32 _ein) public returns (uint) {
+	function mintNewVehicleToken(string _model, string _vin, string _ein) public returns (uint) {
+		string memory ERROR_MESSAGE="max 31 low-level bytes of the UTF-8 representation exceeded";
+		require(bytes(_model).length <= 31, ERROR_MESSAGE);
+		require(bytes( _vin ).length <= 31, ERROR_MESSAGE);
+		require(bytes( _ein ).length <= 31, ERROR_MESSAGE);
 		require(msg.sender == creator, "Access Right Error: Only creator is allowed to mint new vehicle token.");
 		serial += 1;
 		_mint(creator, serial);
 		vehicleDataStore[serial] = VehicleData({model: _model, vin:_vin, ein:_ein});
-		emit NewVehicleToken(serial);
+		emit EventNewVehicleToken(serial);
 		return serial;
 	}
 
@@ -186,7 +194,7 @@ contract ERC721Vehicle is ERC721Token {
 
 	function getVehicleData(uint _tokenId) public view 
 		onlyValidToken(_tokenId)
-		returns(bytes32 model, bytes32 vin, bytes32 ein)
+		returns(string model, string vin, string ein)
 	{
 		return(vehicleDataStore[_tokenId].model, vehicleDataStore[_tokenId].vin, vehicleDataStore[_tokenId].ein);
 	}
@@ -218,8 +226,7 @@ contract ERC721Vehicle is ERC721Token {
 	}
 
 	/*	TRANSFER FUNCTIONS
-		overwrite function in ERC721BasicToken.sol to implement Circuit Breaker */
-
+		overwrite function in ERC721BasicToken.sol to implement Circuit Breaker 'stopInEmergency' */
 	
 	/**
 	* @dev Transfers the ownership of a given token ID to another address

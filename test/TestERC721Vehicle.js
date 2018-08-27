@@ -24,7 +24,7 @@ contract('ERC721Vehicle', function (accounts) {
     // to save costly space on the blovkchain, model, vin and ein have been defined as bytes32
     // Here we test web3, if it converts Ascii <-> bytes32 correctly
     // toAscii and fromAscii causes problem due to '0x00' padding at the end, so we use the UTF8 version
-
+    // (update) actually not needed at the moment as bytes32 parameter were replaced by string
     it("web3.fromUtf8 > web3.toUtf8 should result in identical value", () => {
         assert.equal(model, web3.toUtf8(web3.fromUtf8(model)))
     });
@@ -47,7 +47,7 @@ contract('ERC721Vehicle', function (accounts) {
 
     it("should mint a ERC721 token for a new car", async () => {
         var eventEmitted = false
-        var event = vc.NewVehicleToken()
+        var event = vc.EventNewVehicleToken()
         await event.watch((err, res) => {
             // tokenId = res.args.tokenId.toString(10) // ???
             eventEmitted = true
@@ -55,7 +55,8 @@ contract('ERC721Vehicle', function (accounts) {
 
         // convert parameter to bytes32
         // https://ethereum.stackexchange.com/questions/23058/web3-return-bytes32-string
-        await vc.mintNewVehicleToken(web3.fromUtf8(model), web3.fromUtf8(vin), web3.fromUtf8(ein), { from: creator });
+        // await vc.mintNewVehicleToken(web3.fromUtf8(model), web3.fromUtf8(vin), web3.fromUtf8(ein), { from: creator });
+        await vc.mintNewVehicleToken(model, vin, ein, { from: creator });
         assert.equal(await vc.getLastSerial.call(), 1, "the serial number of the last created vehicle token should be 1")
     })
 
@@ -81,9 +82,9 @@ contract('ERC721Vehicle', function (accounts) {
     it("should get getVehicleData", async () => {
         result = await vc.getVehicleData(tokenId);
         // toAscii does not work as it will convert trailing '00' to \0000
-        assert.equal(web3.toUtf8(result[0]), model, "retrieved getVehicleData.vin not identical with stored vin")
-        assert.equal(web3.toUtf8(result[1]), vin, "retrieved getVehicleData.vin not identical with stored vin")
-        assert.equal(web3.toUtf8(result[2]), ein, "retrieved getVehicleData.ein not identical with stored ein")
+        assert.equal(result[0], model, "retrieved getVehicleData.vin not identical with stored vin")
+        assert.equal(result[1], vin, "retrieved getVehicleData.vin not identical with stored vin")
+        assert.equal(result[2], ein, "retrieved getVehicleData.ein not identical with stored ein")
     })
 
     // needs web3@1.0.0 ABIencoderV2

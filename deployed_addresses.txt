@@ -1,3 +1,4 @@
+// deploy version bytes32
 $ truffle migrate --network rinkeby
 Using network 'rinkeby'.
 
@@ -32,3 +33,5 @@ TxHash:0xab7496853261abd43d278443e6fb2e137ca4527d78c7844f8d65d5a855bdac0d
 https://rinkeby.etherscan.io/tx/0xab7496853261abd43d278443e6fb2e137ca4527d78c7844f8d65d5a855bdac0d
 
 
+Tokentracker Porsche / POR
+https://rinkeby.etherscan.io/token/0x9eafc37a5d473c5c0c9532bcb54104dcf72ee282
