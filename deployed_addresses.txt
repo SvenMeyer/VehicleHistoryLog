@@ -1,0 +1,34 @@
+$ truffle migrate --network rinkeby
+Using network 'rinkeby'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+Error encountered, bailing. Network state unknown. Review successful transactions manually.
+insufficient funds for gas * price + value
+sum@XPS15 ~/DEV/VehicleHistoryLog-next $ truffle migrate --network rinkeby
+Using network 'rinkeby'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0x849705eda3ab61805d8478d289e0e30a10c6f49c402b0555947a870f2c33bff2
+  Migrations: 0xcfd314b14cab8c3e36852a249edcaa1d3dd05055
+Saving successful migration to network...
+  ... 0xaba138768c6780d5a9118aaea9f1264a8caaf1d89506af92c5c271b9486a2955
+Saving artifacts...
+Running migration: 2_deploy_contracts.js
+  Deploying ERC721Vehicle...
+  ... 0xab7496853261abd43d278443e6fb2e137ca4527d78c7844f8d65d5a855bdac0d
+  ERC721Vehicle: 0x9eafc37a5d473c5c0c9532bcb54104dcf72ee282
+Saving successful migration to network...
+  ... 0x4f6a0aec77a6488c79aecb2e52daa53e090ff8b50a1e9e03f8820a288320febc
+Saving artifacts...
+$
+
+ERC721Vehicle contract address:
+0x9eafc37a5d473c5c0c9532bcb54104dcf72ee282
+https://rinkeby.etherscan.io/address/0x9eafc37a5d473c5c0c9532bcb54104dcf72ee282
+
+TxHash:0xab7496853261abd43d278443e6fb2e137ca4527d78c7844f8d65d5a855bdac0d
+https://rinkeby.etherscan.io/tx/0xab7496853261abd43d278443e6fb2e137ca4527d78c7844f8d65d5a855bdac0d
+
+

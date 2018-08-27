@@ -31,11 +31,13 @@ var privateKey = process.env.PRIVATEKEYADDRESS; // private keys
 // local default test wallet
 // var mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
 
-const fullPathBuildDirectory = `${__dirname}/client/lib/contracts`;
+// enable for workaround to store build/contract.json within React directory
+// const fullPathBuildDirectory = `${__dirname}/client/lib/contracts`;
 
 module.exports = {
 
-  contracts_build_directory: fullPathBuildDirectory,
+  // enable for workaround to store build/contract.json within React directory
+  // contracts_build_directory: fullPathBuildDirectory,
 
   networks: {
     // port: 7545 - ganache GUI
