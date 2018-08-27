@@ -22,9 +22,11 @@
 // require('@babel/register')
 // require('@babel/polyfill')
 
-// var HDWalletProvider = require('truffle-hdwallet-provider')
+var HDWalletProvider = require('truffle-hdwallet-provider')
 
-// var mnemonic = process.env.HDWALLET_MNEMONIC
+var mnemonic = process.env.HDWALLET_MNEMONIC
+
+var privateKey = process.env.PRIVATEKEYADDRESS; // private keys
 
 // local default test wallet
 // var mnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
@@ -41,8 +43,41 @@ module.exports = {
     // port: 9545 - truffle develop (Truffle's built-in blockchain)
     development: {
       host: 'localhost',
-      port: 9545,
+      port: 8545,
       network_id: '*' // Match any network id
+    },
+    /*
+    ropsten: {
+      provider: new HDWalletProvider(mnemonic, process.env.ROPSTEN_PROVIDER_URL),
+      network_id: 3,
+      gas: 4612388,
+      gasPrice: 100000000000
+    },
+    */
+    ropsten: {
+      provider: () => {
+        return new HDWalletProvider(mnemonic, process.env.ROPSTEN_PROVIDER_URL)
+      },
+      network_id: 3,
+      gas: 6500000,
+      gasPrice: 100000000000
+    },
+    /*
+    rinkeby: {
+      provider: new HDWalletProvider(mnemonic, process.env.RINKEBY_PROVIDER_URL),
+      network_id: 4,
+      from: '0xa31F3d5d0d8A412084a3f83D253340524F7f8897',
+      gas: 6500000,
+      gasPrice: 100000000000
+    },
+    */
+    rinkeby: {
+      provider: () => {
+        return new HDWalletProvider(mnemonic, process.env.RINKEBY_PROVIDER_URL)
+      },
+      network_id: 4,
+      gas: 6500000,
+      gasPrice: 100000000000
     }
   },
 
