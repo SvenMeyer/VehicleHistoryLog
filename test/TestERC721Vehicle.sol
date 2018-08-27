@@ -9,7 +9,7 @@ contract TestERC721Vehicle {
     //calling the DeployedAddresses smart contract to get its address.
     ERC721Vehicle vc = ERC721Vehicle(DeployedAddresses.ERC721Vehicle());
     
-	// Test to add first item
+	// Test to mint 2 new token = 2 new vehicles
 
     function testMintNewVehicleToken() public {
         bytes32 model_1 = 'Cayenne';
@@ -25,9 +25,16 @@ contract TestERC721Vehicle {
         Assert.equal(tokenId_2, 2, "tokenId of second vehicle should be 2");
     }
 
+    // tokenId = serial is autoincremented
+    // Test if the value can be retrieved and if the value is 2
+
     function testGetLastSerial() public {
         Assert.equal(vc.getLastSerial(), 2, "last serial should be 2");
     }
+
+    // With 2 token/vehicles being added by now, tokenId 0 should be not valid
+    // tokenId 1 and 2 should represent the 2 token/vehicles created before
+    // there should not be a volid tokenId/vehicle 3
 
     function testIsValidToken() public {
         Assert.equal(vc.isValidToken(0), false, "isValidToken(0) should be false");

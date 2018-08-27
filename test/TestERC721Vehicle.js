@@ -21,9 +21,18 @@ contract('ERC721Vehicle', function (accounts) {
     // web3 1.0 it might change to web3.utils.fromWei
     const price = web3.toWei(100, "ether");
 
+    // to save costly space on the blovkchain, model, vin and ein have been defined as bytes32
+    // Here we test web3, if it converts Ascii <-> bytes32 correctly
+    // toAscii and fromAscii causes problem due to '0x00' padding at the end, so we use the UTF8 version
+
     it("web3.fromUtf8 > web3.toUtf8 should result in identical value", () => {
         assert.equal(model, web3.toUtf8(web3.fromUtf8(model)))
     });
+
+    // Test to ...
+    // 1) deploy contract
+    // 2) check if contract exists / has a valid address
+    // 3) creator of the contract has been set correctly
 
     it("deploys contract & sets a contract creator", async () => {
         vc = await ERC721Vehicle.new({ from: creator })
@@ -31,6 +40,10 @@ contract('ERC721Vehicle', function (accounts) {
         assert.ok(await vc.address);
         assert.equal(await vc.creator.call(), creator)
     });
+
+    // Test to mint a new (first) token for a a new vehicle
+    // Check if event will be emitted
+    // Check if tokenId/serial = 1
 
     it("should mint a ERC721 token for a new car", async () => {
         var eventEmitted = false
@@ -46,6 +59,9 @@ contract('ERC721Vehicle', function (accounts) {
         assert.equal(await vc.getLastSerial.call(), 1, "the serial number of the last created vehicle token should be 1")
     })
 
+    // Test to add a HistoryLog entry for a specified tokenId/vehicle
+    // Retrieve the (now last) entry again and check if the data is identical
+
     it("should add an HistoryLog entry", async () => {
         assert.equal(await vc.getLogEntryCount(tokenId), 0, "getLogEntryCount should be 0");
         const milage = 10;
@@ -60,6 +76,8 @@ contract('ERC721Vehicle', function (accounts) {
         assert.equal(result[3], URI, "URI should match the parameter at creation time");
     })
 
+    // Retrieve Data for a specified tokenId/vehicle and compare with test data
+
     it("should get getVehicleData", async () => {
         result = await vc.getVehicleData(tokenId);
         // toAscii does not work as it will convert trailing '00' to \0000
@@ -69,7 +87,7 @@ contract('ERC721Vehicle', function (accounts) {
     })
 
     // needs web3@1.0.0 ABIencoderV2
-    // truffle does not support web3 >= 1.0.0 (just) not yet
+    // truffle v4 does not support web3 >= 1.0.0 (just)
     // https://github.com/ethereum/web3.js/issues/1241
     /*
     it("should get getVehicleData_Struct", async () => {
@@ -78,108 +96,3 @@ contract('ERC721Vehicle', function (accounts) {
     })
     */
 });
-
-/*
-		assert.equal(result[0], name, 'the name of the last added item does not match the expected value')
-		assert.equal(result[2].toString(10), price, 'the price of the last added item does not match the expected value')
-		assert.equal(result[3].toString(10), 0, 'the state of the item should be "For Sale", which should be declared first in the State Enum')
-		assert.equal(result[4], alice, 'the address adding the item should be listed as the seller')
-		assert.equal(result[5], emptyAddress, 'the buyer address should be set to 0 when an item is added')
-		assert.equal(eventEmitted, true, 'adding an item should emit a For Sale event')
-*/
-
-/* OLD ------------------------------------------------ */
-/*	
-    it("should add an item with the provided name and price", async() => {
-        const ERC721Vehicle = await ERC721Vehicle.deployed()
-
-        var eventEmitted = false
-
-        var event = ERC721Vehicle.ForSale()
-        await event.watch((err, res) => {
-            tokenId = res.args.tokenId.toString(10)
-            eventEmitted = true
-        })
-
-        const name = "Porsche 911"
-
-        await ERC721Vehicle.addItem(name, price, {from: alice})
-
-        const result = await ERC721Vehicle.getLogEntryLast.call(tokenId)
-
-        assert.equal(result[0], name, 'the name of the last added item does not match the expected value')
-        assert.equal(result[2].toString(10), price, 'the price of the last added item does not match the expected value')
-        assert.equal(result[3].toString(10), 0, 'the state of the item should be "For Sale", which should be declared first in the State Enum')
-        assert.equal(result[4], alice, 'the address adding the item should be listed as the seller')
-        assert.equal(result[5], emptyAddress, 'the buyer address should be set to 0 when an item is added')
-        assert.equal(eventEmitted, true, 'adding an item should emit a For Sale event')
-    })
-
-    it("should allow someone to purchase an item", async() => {
-        const ERC721Vehicle = await ERC721Vehicle.deployed()
-
-        var eventEmitted = false
-
-        var event = ERC721Vehicle.Sold()
-        await event.watch((err, res) => {
-            tokenId = res.args.tokenId.toString(10)
-            eventEmitted = true
-        })
-
-        const amount = web3.toWei(2, "ether")
-
-        var aliceBalanceBefore = await web3.eth.getBalance(alice).toNumber()
-        var bobBalanceBefore = await web3.eth.getBalance(bob).toNumber()
-
-        await ERC721Vehicle.buyItem(tokenId, {from: bob, value: amount})
-
-        var aliceBalanceAfter = await web3.eth.getBalance(alice).toNumber()
-        var bobBalanceAfter = await web3.eth.getBalance(bob).toNumber()
-
-        const result = await ERC721Vehicle.fetchItem.call(tokenId)
-
-        assert.equal(result[3].toString(10), 1, 'the state of the item should be "Sold", which should be declared second in the State Enum')
-        assert.equal(result[5], bob, 'the buyer address should be set bob when he purchases an item')
-        assert.equal(eventEmitted, true, 'adding an item should emit a Sold event')
-        assert.equal(aliceBalanceAfter, aliceBalanceBefore + parseInt(price, 10), "alice's balance should be increased by the price of the item")
-        assert.isBelow(bobBalanceAfter, bobBalanceBefore - price, "bob's balance should be reduced by more than the price of the item (including gas costs)")
-    })
-
-    it("should allow the seller to mark the item as shipped", async() => {
-        const ERC721Vehicle = await ERC721Vehicle.deployed()
-
-        var eventEmitted = false
-
-        var event = ERC721Vehicle.Shipped()
-        await event.watch((err, res) => {
-            tokenId = res.args.tokenId.toString(10)
-            eventEmitted = true
-        })
-
-        await ERC721Vehicle.shipItem(tokenId, {from: alice})
-
-        const result = await ERC721Vehicle.fetchItem.call(tokenId)
-
-        assert.equal(eventEmitted, true, 'adding an item should emit a Shipped event')
-        assert.equal(result[3].toString(10), 2, 'the state of the item should be "Shipped", which should be declared third in the State Enum')
-    })
-
-    it("should allow the buyer to mark the item as received", async() => {
-        const ERC721Vehicle = await ERC721Vehicle.deployed()
-
-        var eventEmitted = false
-
-        var event = ERC721Vehicle.Received()
-        await event.watch((err, res) => {
-            tokenId = res.args.tokenId.toString(10)
-            eventEmitted = true
-        })
-
-        await ERC721Vehicle.receiveItem(tokenId, {from: bob})
-
-        const result = await ERC721Vehicle.fetchItem.call(tokenId)
-
-        assert.equal(eventEmitted, true, 'adding an item should emit a Shipped event')
-        assert.equal(result[3].toString(10), 3, 'the state of the item should be "Received", which should be declared fourth in the State Enum')
-    })
-*/

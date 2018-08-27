@@ -6,6 +6,8 @@ import "../contracts/ERC721Vehicle.sol";
 
 contract TestERC721VehicleStorage {
 
+  // just tests basic functionality of contract to store and retrieve a value using solidity
+
   function testItStoresAValue() public {
     ERC721Vehicle vehicleStorage = ERC721Vehicle(DeployedAddresses.ERC721Vehicle());
 
