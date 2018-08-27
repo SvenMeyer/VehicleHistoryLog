@@ -72,13 +72,3 @@ Allowed users : any
 Allowed users : Owner  
 8.1 remove vehicle from existence
 
-
-## Implemetation Approach
-For the outlined requirements, an implementation based on Non-Fungible-Token (NFT) as defined in [ERC721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md) seems to be a perfect fit.
-
-Every ERC-721 compliant contract must implement the ERC721 and ERC165 interfaces:
-[https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)  
-[https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md)
-
-Given the limited time to implement this projects as well as the fact that the standard is pretty new, and to reuse as much implementation knowledge and effort which has been made available on this new topic so far, the [ERC721Token](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/ERC721/ERC721Token.sol) implementation from OpenZeppelin will be used as a basis for this project.
-
