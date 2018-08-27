@@ -1,6 +1,6 @@
 # VehicleHistoryLog
 
-## General Security relevant Measures
+## Avoiding Common Attacks
 
 ### External calls
 No external calls to unknown contracts are being made
@@ -14,8 +14,6 @@ Fallback function is simple, keeps sent ether and emits an event to send out a n
 ### Explicitly mark visibility in functions and state variables
 done
 
-## Avoiding known Attacks
-
 ### Race Conditions / Reentrancy
 Race Conditions and Reentrancy attacks are being avoided by relying on the multiple times reviewed library code from OpenZeppelin.
 
@@ -24,10 +22,10 @@ Problems caused by Overflow or Underflow of uint are covered by using SafeMath (
 `using SafeMath for uint256;`
 
 ### Timestamp Dependence
-Not used, so it not a possible attack possibility.
+Not used, so it not a possible attack scenario.
 
 ### Transaction-Ordering Dependence (TOD) / Front Running
-Not used, so it not a possible attack possibility.
+Not used, so it not a possible attack scenario.
 
 ### DoS with (Unexpected) revert / DoS with Block Gas Limit
 Only `SafeTransferFrom(...)` is used to prevent such attacks.
