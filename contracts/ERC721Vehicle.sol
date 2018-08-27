@@ -1,5 +1,5 @@
 pragma solidity ^0.4.24;
-pragma experimental ABIEncoderV2;
+// pragma experimental ABIEncoderV2; // enable when passing structs to web3@1.0.0
 
 import "./ERC721.sol";
 import "./ERC721Token.sol";
