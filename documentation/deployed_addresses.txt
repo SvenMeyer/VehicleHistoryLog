@@ -22,3 +22,4 @@ ERC721Vehicle contract address : 0x608b4012179129a20cb0916af0b03cbe2a8db320
 
 [https://rinkeby.etherscan.io/address/0x608b4012179129a20cb0916af0b03cbe2a8db320](https://rinkeby.etherscan.io/address/0x608b4012179129a20cb0916af0b03cbe2a8db320)
 
+the address is also available at : svenmeyer.eth
