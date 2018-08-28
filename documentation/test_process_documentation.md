@@ -1,17 +1,32 @@
 # Test Process Documentation
 
-## preparation
-1. Setup .envrc file with environment variables
-2. `source .envrc`
-3. terminal 1 : `ganache-cli -m "$HDWALLET_MNEMONIC"`
+## start ganache-cli
+I prefer to start ganache-cli with the menemonic of my MetaMask wallet. I have a file `.envrc` which stores my mnemonic in $HDWALLET_MNEMONIC.
+The file also contains Infura Provider URLs. You can find a template for your own values named `.envrc_template`.
+1. `source .envrc`
+2. `ganache-cli -m "$HDWALLET_MNEMONIC"`
+Should result in ganache-cli starting and listening on localhost with default port [127.0.0.1:8545](127.0.0.1:8545).
 
-## terminal 2 - local compile and run tests
+## local compile and run tests
+In another terminal, you can compile, migrate and test the contracts locally.
 1. `cd VehicleHistoryLog`
 2. `truffle compile --all`
 3. `truffle migrate --network development --reset`
 4. `truffle test`
+You should expect to see 10/10 test run successfully.
+
+## UI
+As mentioned in [README.md](../README.md) the Webinterface it unfortunately pretty unfinished, nevertheless all the smartcontract + React + next.js project integration has been done and it should be possible to start the webserver to get some basic information displayed in a webbrowser.
+1. `cd client` (if you are not within the client directory, you will get an error message `npm ERR! missing script: dev`)
+2. `npm run dev`
+3. within MetaMask select the ganache-cli local blockchain network: [http://localhost:8545](#)
+4. with your browser access [http://localhost:3000](http://localhost:3000)
+Note: At this stage either I or MetaMask got confused. Not sure if you will experience the same strange behavior, but within the Browser Console I could see that it did NOT work when I had selected localhost:8545 (where ganache-cli should wait for requests), but when I selected "Rinkeby Network" instead.
+
+
 
 ## Deploy to Rinkeby Testnet
+There is already a contract deploayed on Rinkeby, but if you want to try it yourself, it should be pretty easy with the setup provide.
 1. make sure you have enough test ETH in the Rinkeby account with the corresponding wallet mnemonic defined in env variable `HDWALLET_MNEMONIC`
 2. `truffle migrate --network rinkeby --reset`
 
