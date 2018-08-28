@@ -26,7 +26,8 @@ Note: At this stage either I or MetaMask got confused. Not sure if you will expe
 The basic functionality should work:
 - Display current MetaMask account[0]
 - executing a transaction (mintNewVehicleToken) with confirmation via MetaMask
-- reflect update to the contract state by retrieving "last new tokenId" via [get Last Serial] button
+- reflect update to the contract state by executing "getVehicleData"
+- reflect update to the contract state by executing "getLastSerial" (will show up after "last new tokenId")
 - get Ether Balance
 
 
