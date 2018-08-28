@@ -15,7 +15,7 @@ In another terminal, you can compile, migrate and test the contracts locally.
 4. `truffle test`
 You should expect to see 10/10 test run successfully.
 
-## UI
+## Web UI
 As mentioned in [README.md](../README.md) the Webinterface it unfortunately pretty unfinished, nevertheless all the smartcontract + React + next.js project integration has been done and it should be possible to start the webserver to get some basic information displayed in a webbrowser.
 1. `cd client` (if you are not within the client directory, you will get an error message `npm ERR! missing script: dev`)
 2. `npm run dev`
@@ -23,6 +23,11 @@ As mentioned in [README.md](../README.md) the Webinterface it unfortunately pret
 4. with your browser access [http://localhost:3000](http://localhost:3000)
 Note: At this stage either I or MetaMask got confused. Not sure if you will experience the same strange behavior, but within the Browser Console I could see that it did NOT work when I had selected localhost:8545 (where ganache-cli should wait for requests), but when I selected "Rinkeby Network" instead.
 
+The basic functionality should work:
+- Display current MetaMask account[0]
+- executing a transaction (mintNewVehicleToken) with confirmation via MetaMask
+- reflect update to the contract state by retrieving "last new tokenId" via [get Last Serial] button
+- get Ether Balance
 
 
 ## Deploy to Rinkeby Testnet
