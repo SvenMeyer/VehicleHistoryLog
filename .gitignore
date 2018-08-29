@@ -29,5 +29,4 @@ modules/
 node_modules/
 build/
 
-client/lib/contracts/
 

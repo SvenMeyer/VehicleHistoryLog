@@ -1,28 +1,33 @@
 # Test Process Documentation
 
+## development environtement
+You should have the 'standard stuff' installed: node (10.9), npm (6.4.0), truffle (4.1.14), ganache-cli (v6.1.8) with (ganache-core: 2.2.1), Chrome + MetaMask, ...
+
 ## start ganache-cli
-I prefer to start ganache-cli with the menemonic of my MetaMask wallet. I have a file `.envrc` which stores my mnemonic in $HDWALLET_MNEMONIC.
-The file also contains Infura Provider URLs. You can find a template for your own values named `.envrc_template`.
-1. `source .envrc`
-2. `ganache-cli -m "$HDWALLET_MNEMONIC"`
-Should result in ganache-cli starting and listening on localhost with default port [127.0.0.1:8545](127.0.0.1:8545).
+I never encountered that problem, but it is suggested [reason](https://github.com/trufflesuite/truffle/issues/660#issuecomment-343066784) [source](https://truffleframework.com/boxes/truffle-next) to run ganache-cli (testrpc) with the following options:
+1. `ganache-cli --gasLimit 6721975 --gasPrice 100000000000`
+2. keep the displayed mnemonic to later initialize a new MetaMask wallet
 
 ## local compile and run tests
 In another terminal, you can compile, migrate and test the contracts locally.
 1. `cd VehicleHistoryLog`
 2. `npm install`
-3. `truffle compile --all`
-4. `truffle migrate --network development --reset`
+3. `truffle compile`
+4. `truffle migrate --reset`
 5. `truffle test`
 You should expect to see 10/10 test run successfully.
 
 ## Web UI
 As mentioned in [README.md](../README.md) the Webinterface it unfortunately pretty unfinished, nevertheless all the smartcontract + React + next.js project integration has been done and it should be possible to start the webserver to get some basic information displayed in a webbrowser.
-1. `cd client` (if you are not within the client directory, you will get an error message `npm ERR! missing script: dev`)
-2. `npm run dev`
-3. within MetaMask select the ganache-cli local blockchain network: [http://localhost:8545](#)
-4. with your browser access [http://localhost:3000](http://localhost:3000)
-Note: At this stage either I or MetaMask got confused. Not sure if you will experience the same strange behavior, but within the Browser Console I could see that it did NOT work when I had selected localhost:8545 (where ganache-cli should wait for requests), but when I selected "Rinkeby Network" instead.
+1. (Only) if the contract interface (of `ERC721Vehicle.sol`) had been changed and re-compiled, then watch out: The client needs a copy / symlink from `build/contracts` to `client/lib/contracts` as React can not access the .json files outside its (client) directory. Option Copy : `cp -rf ./build/contracts ./client/lib/` or (better on Linux) Option Symlink : `cd client/lib && ln -s ../../build/contracts/ contracts && cd ../..`. There is also a bash script for this : `link-contracts.sh`
+2. `cd client` (if you are not within the client directory, you will get an error message `npm ERR! missing script: dev`)
+3. `npm install`
+4. `npm run dev`
+5. Within MetaMask select the ganache-cli local blockchain network: [http://localhost:8545](http://localhost:8545)
+6. Create a new wallet using the menmonic displayed by genache-cli at startup
+(When developing it is actually a good idea to quite often restart ganache-cli and create a new MetaMask wallet as MetaMask notoriously caches stuff which may cause a lot of problems. [https://medium.com/coinmonks/what-we-learned-building-our-first-dapp-28b01f9fc244](https://medium.com/coinmonks/what-we-learned-building-our-first-dapp-28b01f9fc244))
+7. Access with your browser [http://localhost:3000](http://localhost:3000)
+
 
 The basic functionality should work:
 - Display current MetaMask account[0]
