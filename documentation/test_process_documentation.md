@@ -3,18 +3,22 @@
 ## development environtement
 You should have the 'standard stuff' installed: node (10.9), npm (6.4.0), truffle (4.1.14), ganache-cli (v6.1.8) with (ganache-core: 2.2.1), Chrome + MetaMask, ...
 
-## start ganache-cli
-I never encountered that problem, but it is suggested [reason](https://github.com/trufflesuite/truffle/issues/660#issuecomment-343066784) [source](https://truffleframework.com/boxes/truffle-next) to run ganache-cli (testrpc) with the following options:
+## start truffle / ganache-cli
+I had quite some problems with ganache-cli ... as well as developers from the actual truffle team, who suggested to stay with truffle !
+So, make sure to use [http://127.0.0.1:9545](http://127.0.0.1:9545 )
+
+If somebody wants to try ganache.cli anyway ...
+It is suggested [reason](https://github.com/trufflesuite/truffle/issues/660#issuecomment-343066784) [source](https://truffleframework.com/boxes/truffle-next) to run ganache-cli (testrpc) with the following options:
 1. `ganache-cli --gasLimit 6721975 --gasPrice 100000000000`
 2. keep the displayed mnemonic to later initialize a new MetaMask wallet
 
 ## local compile and run tests
 In another terminal, you can compile, migrate and test the contracts locally.
 1. `cd VehicleHistoryLog`
-2. `npm install`
-3. `truffle compile`
-4. `truffle migrate --reset`
-5. `truffle test`
+2. `truffle develop`
+2. `> compile --all`
+3. `> migrate --reset`
+4. `> test`
 You should expect to see 10/10 test run successfully.
 
 ## Web UI

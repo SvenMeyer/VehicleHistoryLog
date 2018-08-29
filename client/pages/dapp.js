@@ -17,22 +17,31 @@ class Dapp extends React.Component {
     logEntry_documentURI: ''
   };
 
+  
+  storeValue = async () => {
+    const { accounts, contract } = this.props
+    await contract.methods.set(5).send({ from: accounts[0] })
+    // alert('Stored 5 into account')
+  };
+
+  getValue = async () => {
+    const { accounts, contract } = this.props
+    const response = await contract.methods.get().call({ from: accounts[0] })
+    this.setState({ balance: response })
+  };
+
+
   newVehicleToken = async () => {
     const { accounts, contract } = this.props
     const model = 'Porsche Cayenne'
     const vin = 'WP1AB29P64LA63732'
     const ein = 'AFD'
-    const tokenId = await contract.methods.mintNewVehicleToken(web3.fromUtf8(model), web3.fromUtf8(vin), web3.fromUtf8(ein)).send({ from: accounts[0] })
+    const tokenId = await contract.methods.mintNewVehicleToken(
+      web3.utils.utf8ToHex(model), 
+      web3.utils.utf8ToHex(vin), 
+      web3.utils.utf8ToHex(ein)).send({ from: accounts[0] })
     this.setState({ lastTokenId: tokenId })
   };
-  
-  /*
-  storeValue = async () => {
-    const { accounts, contract } = this.props
-    await contract.methods.set(9).send({ from: accounts[0] })
-    alert('Stored 5 into account')
-  };
-  */
 
   getVehicleData = async () => {
     const tokenId = 1;
@@ -56,7 +65,7 @@ class Dapp extends React.Component {
     const { accounts, contract } = this.props
     const response = await contract.methods.getLogEntryLast(tokenId).call({ from: accounts[0] })
     console.log('lastHistoryLog(1) : response =', response)
-    // this.setState({ logEntry_auditor: response[0], logEntry_milage: response[1], logEntry_description: response[2], logEntry_documentURI: response[3] })
+    this.setState({ logEntry_auditor: response[0], logEntry_milage: response[1], logEntry_description: response[2], logEntry_documentURI: response[3] })
   };
 
   getEthBalance = async () => {
@@ -83,9 +92,12 @@ class Dapp extends React.Component {
           </pre>
         </div>
         <p />
+        <button onClick={this.storeValue}>Store 5 into account balance</button>
+        <button onClick={this.getValue}>Get account balance</button>
+        <p />
         <button onClick={this.newVehicleToken}>mintNewVehicleToken</button>&nbsp;&nbsp;
         <button onClick={this.getLastSerial}>getLastSerial</button>&nbsp;&nbsp;
-        <button onClick={this.getVehicleData}>getVehicleData</button>&nbsp;&nbsp;
+        <button onClick={this.getVehicleDataButton}>getVehicleData</button>&nbsp;&nbsp;
         <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
         <button onClick={this.getEthBalance}>Get ether balance</button>
         <p />
