@@ -9,7 +9,7 @@ contract('ERC721Vehicle', (accounts) => {
   it('...should store the value 123.', async () => {
     const ERC721VehicleInstance = await ERC721Vehicle.deployed()
 
-    // Set value of 89
+    // Set value of 123
     await ERC721VehicleInstance.set(123, {from: accounts[0]})
 
     // Get stored value

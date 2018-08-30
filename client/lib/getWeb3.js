@@ -1,26 +1,19 @@
 import Web3 from 'web3'
 
 const resolveWeb3 = (resolve) => {
-  // let { web3 } = window
-  console.log({web3})
+  let { web3 } = window
   const alreadyInjected = typeof web3 !== 'undefined' // i.e. Mist/Metamask
-  // port: 7545 - ganache GUI
-  // port: 8545 - ganache CLI
-  // port: 9545 - truffle develop (Truffle's built-in blockchain)
-  const localProvider = `http://localhost:8545`
+  const localProvider = `http://localhost:9545`
 
   if (alreadyInjected) {
     console.log(`Injected web3 detected.`)
-    console.log('web3.version =', web3.version)
-    web3 = new Web3(window.web3.currentProvider)
+    web3 = new Web3(web3.currentProvider)
   } else {
     console.log(`No web3 instance injected, using Local web3.`)
     const provider = new Web3.providers.HttpProvider(localProvider)
     web3 = new Web3(provider)
   }
-  console.log('using:')
-  console.log('web3.version =', web3.version)
-  console.log('web3.currentProvider:', web3.currentProvider)
+
   resolve(web3)
 }
 

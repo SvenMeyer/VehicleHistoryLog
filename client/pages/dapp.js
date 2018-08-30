@@ -4,7 +4,7 @@ import Web3Container from '../lib/Web3Container'
 
 class Dapp extends React.Component {
   state = {
-    balance: undefined,
+    value: undefined,
     ethBalance: undefined,
     lastSerial: undefined,
     vehicleData: undefined,
@@ -21,13 +21,13 @@ class Dapp extends React.Component {
   storeValue = async () => {
     const { accounts, contract } = this.props
     await contract.methods.set(5).send({ from: accounts[0] })
-    // alert('Stored 5 into account')
+    // alert('Stored 5 into variable >value<')
   };
 
   getValue = async () => {
     const { accounts, contract } = this.props
     const response = await contract.methods.get().call({ from: accounts[0] })
-    this.setState({ balance: response })
+    this.setState({ value: response })
   };
 
 
@@ -75,7 +75,11 @@ class Dapp extends React.Component {
   };
 
   render () {
-    const { balance = 'N/A', ethBalance = 'N/A'} = this.state
+
+    // web3.eth.getAccounts().then(console.log);
+
+    const { value = 'N/A', lastSerial = 'N/A', ethBalance = 'N/A'} = this.state
+
     return (
       <div>
         <h1><pre>VehicleLogHistory</pre></h1>
@@ -92,8 +96,8 @@ class Dapp extends React.Component {
           </pre>
         </div>
         <p />
-        <button onClick={this.storeValue}>Store 5 into account balance</button>
-        <button onClick={this.getValue}>Get account balance</button>
+        <button onClick={this.storeValue}>Basic Test - Store a value (5)</button>&nbsp;&nbsp;
+        <button onClick={this.getValue}>Basic Test - Retrieve value</button>
         <p />
         <button onClick={this.newVehicleToken}>mintNewVehicleToken</button>&nbsp;&nbsp;
         <button onClick={this.getLastSerial}>getLastSerial</button>&nbsp;&nbsp;
@@ -101,10 +105,11 @@ class Dapp extends React.Component {
         <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
         <button onClick={this.getEthBalance}>Get ether balance</button>
         <p />
+
         <pre>
-          <div>last new tokenId : {this.state.lastSerial}</div>
-          <div>Account Balance  : {balance}</div>
+          <div>Test - value     : {value}</div>
           <div>Ether Balance    : {ethBalance}</div>
+          <div>last new tokenId : {this.state.lastSerial}</div>
           <p />
           <div><b>vehicleData: </b><br />
             model : {this.state.model}<br />
