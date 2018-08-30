@@ -15,10 +15,11 @@ It is suggested [reason](https://github.com/trufflesuite/truffle/issues/660#issu
 ## local compile and run tests
 In another terminal, you can compile, migrate and test the contracts locally.
 1. `cd VehicleHistoryLog`
-2. `truffle develop`
-2. `> compile --all`
-3. `> migrate --reset`
-4. `> test`
+2. `truffle compile --all` --- 
+DO NOT DO: `truffle develop` and then `> compile` within truffle. It looks like (after just 1 week of research !!) that this produces corrupt contract.json files with missing functions definition! In this case the JavaSvript frontend will not be able to access the function signtures and the call to the contract will fail for that function!
+3. `truffle develop`
+4. `> migrate --reset`
+5. `> test`
 You should expect to see 10/10 test run successfully.
 
 ## Web UI
