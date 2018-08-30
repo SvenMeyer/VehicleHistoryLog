@@ -22,6 +22,9 @@ contract ERC721Vehicle is ERC721Token {
 	function set(uint x) public {storedData = x;}
 	function get() public view returns (uint) {return storedData;}
 
+	// vehicle token serial numbers (=tokenId) will get numbered starting from 1 (we reserve 0 for not existing/allowed)
+	uint serial = 0; // = tokenId
+
 	// creator of this contract = vehicle manufaturer
 	// its ok that it is public who the creator of this contract is
 	address public creator;
@@ -41,9 +44,7 @@ contract ERC721Vehicle is ERC721Token {
 	}
 	modifier stopInEmergency { if (!stopped) _; }
 
-	// vehicle token serial numbers (=tokenId) will get numbered starting from 1 (we reserve 0 for not existing/allowed)
-	uint internal serial = 0; // = tokenId
- 
+
 	string constant ERROR_ENTRY_DOES_NOT_EXIST = "ERROR: This entry does not exist.";
 
 	/* TYPE DEFINITIONS **************************************** */
@@ -188,9 +189,8 @@ contract ERC721Vehicle is ERC721Token {
 	* @dev get serial number of last produced vehicle = minted token
 	* @return uint serial number of new vehicle token
 	*/
-	function getLastSerial() public view returns (uint) {
-		return serial;
-	}
+	// function get()        public view returns (uint) {return storedData;}
+	function getLastSerial() public view returns (uint) {return serial;}
 
 	function getVehicleData(uint _tokenId) public view 
 		onlyValidToken(_tokenId)

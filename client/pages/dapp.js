@@ -16,7 +16,6 @@ class Dapp extends React.Component {
     logEntry_description: '', 
     logEntry_documentURI: ''
   };
-
   
   storeValue = async () => {
     const { accounts, contract } = this.props
@@ -30,16 +29,13 @@ class Dapp extends React.Component {
     this.setState({ value: response })
   };
 
-
   newVehicleToken = async () => {
     const { accounts, contract } = this.props
     const model = 'Porsche Cayenne'
     const vin = 'WP1AB29P64LA63732'
-    const ein = 'AFD'
-    const tokenId = await contract.methods.mintNewVehicleToken(
-      web3.utils.utf8ToHex(model), 
-      web3.utils.utf8ToHex(vin), 
-      web3.utils.utf8ToHex(ein)).send({ from: accounts[0] })
+    const ein = '1111111111'
+    const tokenId = await contract.methods.mintNewVehicleToken(model, vin, ein).send({ from: accounts[0] })
+
     this.setState({ lastTokenId: tokenId })
   };
 
@@ -100,8 +96,8 @@ class Dapp extends React.Component {
         <button onClick={this.getValue}>Basic Test - Retrieve value</button>
         <p />
         <button onClick={this.newVehicleToken}>mintNewVehicleToken</button>&nbsp;&nbsp;
-        <button onClick={this.getLastSerial}>getLastSerial</button>&nbsp;&nbsp;
-        <button onClick={this.getVehicleDataButton}>getVehicleData</button>&nbsp;&nbsp;
+        <button onClick={this.getLastSerial}>get last new tokenId</button>&nbsp;&nbsp;
+        <button onClick={this.getVehicleData}>getVehicleData</button>&nbsp;&nbsp;
         <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
         <button onClick={this.getEthBalance}>Get ether balance</button>
         <p />
@@ -109,7 +105,7 @@ class Dapp extends React.Component {
         <pre>
           <div>Test - value     : {value}</div>
           <div>Ether Balance    : {ethBalance}</div>
-          <div>last new tokenId : {this.state.lastSerial}</div>
+          <div>last new tokenId : {lastSerial}</div>
           <p />
           <div><b>vehicleData: </b><br />
             model : {this.state.model}<br />

@@ -1,0 +1,60 @@
+3	function set(uint x) public {storedData = x;}
+3	function get() public view returns (uint) {return storedData;}
+4	function setContractActive() isAdmin public {
+4	function setContractInactive() isAdmin public {
+5	function logDepositReceived(address sender, uint value) internal {
+6	function isValidToken(uint _tokenId) public view returns (bool _valid) {
+4	function appendLogEntry(uint _tokenId, uint _milage, string _description, string _documentURI) public
+8	function getLogEntryCount(uint _tokenId) public view
+6	function getLogEntryAtIndex(uint _tokenId, uint _index) public view
+4	function getLogEntryLast(uint _tokenId) public view
+4	function mintNewVehicleToken(string _model, string _vin, string _ein) public returns (uint) {
+4	function getLastSerial() public view returns (uint) {return serial;}
+7	function getVehicleData(uint _tokenId) public view
+4	function getVehicleData_Struct(uint _tokenId) public view
+6	function getLogAtIndex_Struct(uint _tokenId, uint _index) public view
+4	function getLogLast_Struct(uint _tokenId) public view
+6	function transferFrom(
+11	function safeTransferFrom(
+^	function safeTransferFrom(
+	function() public payable {
+4	function kill() public {
+
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "setContractActive" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "setContractInactive" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "appendLogEntry" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getLogEntryCount" ERC721Vehicle.json
+8
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getLogEntryAtIndex" ERC721Vehicle.json
+6
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getLogEntryLast" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "mintNewVehicleToken" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getLastSerial" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getVehicleData" ERC721Vehicle.json
+7
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getVehicleData_Struct" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getLogAtIndex_Struct" ERC721Vehicle.json
+6
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "getLogLast_Struct" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "transferFrom" ERC721Vehicle.json
+6
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "safeTransferFrom" ERC721Vehicle.json
+11
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "kill" ERC721Vehicle.json
+4
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "logDepositReceived" ERC721Vehicle.json
+5
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c "isValidToken" ERC721Vehicle.json
+6
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c '"get"' ERC721Vehicle.json
+3
+sum@XPS15 ~/DEV/VehicleHistoryLog_v0.4/build/contracts $ grep -c '"set"' ERC721Vehicle.json
+
