@@ -6,7 +6,7 @@ class Dapp extends React.Component {
   state = {
     value: undefined,
     ethBalance: undefined,
-    lastSerial: undefined,
+    lastSerial: 0,
     vehicleData: undefined,
     model: undefined,
     vin: undefined,
@@ -30,17 +30,26 @@ class Dapp extends React.Component {
   };
 
   newVehicleToken = async () => {
+    console.log('newVehicleToken ------------------------')
+    console.log(this.state.lastSerial)
+    const oldSerial = this.state.lastSerial;
     const { accounts, contract } = this.props
     const model = 'Porsche Cayenne'
     const vin = 'WP1AB29P64LA63732'
-    const ein = '1111111111'
-    const tokenId = await contract.methods.mintNewVehicleToken(model, vin, ein).send({ from: accounts[0] })
-
+    console.log({ oldSerial })
+    const newSerial = oldSerial + 1
+    console.log({ newSerial })
+    const ein = newSerial.toString()
+    console.log({ein})
+    const tokenId = await contract.methods.mintNewVehicleToken(model, vin, ein ).send({ from: accounts[0] })
     this.setState({ lastTokenId: tokenId })
   };
 
   getVehicleData = async () => {
-    const tokenId = 1;
+    console.log('getVehicleData -------------------------')
+    console.log(this.state.lastSerial)
+    const tokenId = Number(this.state.lastSerial);
+    console.log({ tokenId })
     const { accounts, contract } = this.props
     const response = await contract.methods.getVehicleData(tokenId).call({ from: accounts[0] })
     console.log('getVehicleData(1) : response =', response)
@@ -49,10 +58,13 @@ class Dapp extends React.Component {
   };
 
   getLastSerial = async () => {
+    console.log('getLastSerial -------------------------')
+    console.log(this.state.lastSerial)
     const { accounts, contract } = this.props
     const response = await contract.methods.getLastSerial().call({ from: accounts[0] })
     console.log('getLastSerial : response =', response)
-    this.setState({ lastSerial: response })
+    this.setState({ lastSerial: Number(response) })
+    console.log({response})
     console.log('lastSerial =', this.state.lastSerial)
   };
 
@@ -95,11 +107,11 @@ class Dapp extends React.Component {
         <button onClick={this.storeValue}>Basic Test - Store a value (5)</button>&nbsp;&nbsp;
         <button onClick={this.getValue}>Basic Test - Retrieve value</button>
         <p />
-        <button onClick={this.newVehicleToken}>mintNewVehicleToken</button>&nbsp;&nbsp;
+        <button onClick={this.newVehicleToken}>newVehicleToken</button>&nbsp;&nbsp;
         <button onClick={this.getLastSerial}>get last new tokenId</button>&nbsp;&nbsp;
         <button onClick={this.getVehicleData}>getVehicleData</button>&nbsp;&nbsp;
         <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
-        <button onClick={this.getEthBalance}>Get ether balance</button>
+        <button onClick={this.getEthBalance}>getEthBalance</button>
         <p />
 
         <pre>
