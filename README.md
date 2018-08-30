@@ -102,6 +102,17 @@ During following interations, a few integrations and evaluations with various Re
 
 ## Notes on UI implementation
 
-The project was defined when I assumed that I would have plenty of time, but other private issues needed my attention for quite as while. As a result, the next.js based code for the website/UI has been integrated, but is far from finished and just shows basic functionality of a JavaScript based website interacting via web3 (1.0.0-beta) with the underlying smart contract.
-For this reason Remix is used as a UI to access all functions of the smartcontract. More information and guidance is documented in [test_process_documentation.md](documentation/test_process_documentation.md) within the documentation directory where also more information can be found.
+The current (very basic) Web Frontend can work with locally deployed contracts and will automatically switch to the contract on Rinkeby when that network is selected on MetaMask.
+
+At this stage the React + Next.js Web UI demonstrates the following basic features.
+
+- display current MetaMask account
+- get current Balance
+- simple transaction of storing a predefined value and retrieving it again
+- generate new Vehicle Token*, autoincrement the 'ein', retrieve last tokenID and getLastVehicle Data (*This function is actually restricted to the deployer of the contract. If you want to use the deployed and preconfigured contract then you have to use the wallet mnemonic in `.envrc` - please do not drain all the funds.)
+- History Log Entries could be retrieved but feature for creating entries is still missing
+
+Many more features of the underlying smart contract can be accessed by using Remix to auto-generate a UI.
+
+More information and guidance is documented in [test_process_documentation.md](documentation/test_process_documentation.md) within the documentation directory.
 
