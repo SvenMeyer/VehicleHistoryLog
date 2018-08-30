@@ -14,7 +14,8 @@ class Dapp extends React.Component {
     logEntry_auditor: '', 
     logEntry_milage: '',
     logEntry_description: '', 
-    logEntry_documentURI: ''
+    logEntry_documentURI: '',
+    networkId: ''
   };
   
   storeValue = async () => {
@@ -82,6 +83,12 @@ class Dapp extends React.Component {
     this.setState({ ethBalance: balanceInWei / 1e18 })
   };
 
+  getNetworkId = async () => {
+    networkId = await web3.eth.net.getId();
+    this.setState({ networkId: networkId })
+  };
+
+
   render () {
 
     // web3.eth.getAccounts().then(console.log);
@@ -91,39 +98,53 @@ class Dapp extends React.Component {
     return (
       <div>
         <h1><pre>VehicleLogHistory</pre></h1>
+
         <div>
           <pre>
             <Link href='/accounts'><a>[My Accounts]</a></Link>&nbsp;
             <Link href='/'><a>[Home]</a></Link>
           </pre>
         </div>
-        <p />
-        <div>
-          <pre>current account : {this.props.accounts}&nbsp;
-            <Link href={('https://rinkeby.etherscan.io/address/').concat(this.props.accounts)}><a target="_blank">[rinkeby.etherscan.io]</a></Link>
-          </pre>
-        </div>
-        <p />
-        <button onClick={this.storeValue}>Basic Test - Store a value (5)</button>&nbsp;&nbsp;
-        <button onClick={this.getValue}>Basic Test - Retrieve value</button>
-        <p />
-        <button onClick={this.newVehicleToken}>newVehicleToken</button>&nbsp;&nbsp;
-        <button onClick={this.getLastSerial}>get last new tokenId</button>&nbsp;&nbsp;
-        <button onClick={this.getVehicleData}>getLastVehicleData</button>&nbsp;&nbsp;
-        <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
-        <button onClick={this.getEthBalance}>getEthBalance</button>
+
         <p />
 
         <pre>
-          <div>Test - value     : {value}</div>
-          <div>Ether Balance    : {ethBalance}</div>
-          <div>last new tokenId : {lastSerial}</div>
+          current account : {this.props.accounts} &nbsp;
+          <Link href={('https://rinkeby.etherscan.io/address/').concat(this.props.accounts)}><a target="_blank">[rinkeby.etherscan.io]</a></Link>
+        </pre>
+          
+        <pre>
+          <p />
+          <button onClick={this.getEthBalance}>getEthBalance</button> &nbsp;
+          Ether Balance : {ethBalance}
+        </pre>
+
+        <pre>
+          <button onClick={this.storeValue}>Basic Test - Store a value (5)</button> &nbsp;&nbsp;
+          <button onClick={this.getValue}>Basic Test - Retrieve value</button> &nbsp;&nbsp;
+          Test - value : {value}
+        </pre>
+
+        <pre>
+          <button onClick={this.getLastSerial}>get last new tokenId</button> &nbsp; last new tokenId : {lastSerial}
+        </pre>
+        
+        <pre>  
+          <div></div>
+          <p />
+          <p />
+          <button onClick={this.newVehicleToken}>newVehicleToken</button>&nbsp;&nbsp;
+          
+          <button onClick={this.getVehicleData}>getLastVehicleData</button>&nbsp;&nbsp;
           <p />
           <div><b>vehicleData: </b><br />
             model : {this.state.model}<br />
             vin   : {this.state.vin}<br />
             ein   : {this.state.ein}<br />        
           </div>
+          <p />
+          <button onClick={this.lastHistoryLog}>newHistoryLog - not yet implemented</button>&nbsp;&nbsp;
+          <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
           <p />
           <div><b>lastHistoryLog: </b><br />
             logEntry_auditor      : {this.state.modlogEntry_auditorel}<br />
