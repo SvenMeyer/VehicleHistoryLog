@@ -1,6 +1,34 @@
-$ `truffle migrate --network rinkeby --reset`
+$ truffle migrate --network rinkeby --reset
+Using network 'rinkeby'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0xd83de39abdc5672952949014f3e52fa5cac888d5a41bb9da971d951cae94a456
+  Migrations: 0x14920d278c20079073f405247c21fcfcf2a9a81d
+Saving successful migration to network...
+  ... 0x55e4357d1f23a5c591c033c3bc9550fce3697cd58dbb42149d0228022f937983
+Saving artifacts...
+Running migration: 2_deploy_contracts.js
+  Deploying ERC721Vehicle...
+  ... 0x5a743742c5a4102f9cd67bc4116c6d027989c55e8be5c036cca4715cb46192c6
+  ERC721Vehicle: 0xc722344f2fba0effb97550f075481041b6e00909
+Saving successful migration to network...
+  ... 0x55cd7ccb3f11722ee7c4438882a07a4d8022e41bfda50c5af8863d884b650d05
+Saving artifacts...
 
 ```
+ERC721Vehicle contract address : 0xc722344f2fba0effb97550f075481041b6e00909
+
+[https://rinkeby.etherscan.io/address/0xc722344f2fba0effb97550f075481041b6e00909](https://rinkeby.etherscan.io/address/0xc722344f2fba0effb97550f075481041b6e00909)
+
+the address is also available at : svenmeyer.eth
+
+/* ------------------------------------------------------------------------------------------ */
+
+# OLD VERSION
+
+$ `truffle migrate --network rinkeby --reset`
+
 Using network 'rinkeby'.
 
 Running migration: 1_initial_migration.js
@@ -21,5 +49,3 @@ Saving artifacts...
 ERC721Vehicle contract address : 0x608b4012179129a20cb0916af0b03cbe2a8db320
 
 [https://rinkeby.etherscan.io/address/0x608b4012179129a20cb0916af0b03cbe2a8db320](https://rinkeby.etherscan.io/address/0x608b4012179129a20cb0916af0b03cbe2a8db320)
-
-the address is also available at : svenmeyer.eth
