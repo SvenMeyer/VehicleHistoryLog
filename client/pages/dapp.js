@@ -109,7 +109,7 @@ class Dapp extends React.Component {
         <p />
         <button onClick={this.newVehicleToken}>newVehicleToken</button>&nbsp;&nbsp;
         <button onClick={this.getLastSerial}>get last new tokenId</button>&nbsp;&nbsp;
-        <button onClick={this.getVehicleData}>getVehicleData</button>&nbsp;&nbsp;
+        <button onClick={this.getVehicleData}>getLastVehicleData</button>&nbsp;&nbsp;
         <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
         <button onClick={this.getEthBalance}>getEthBalance</button>
         <p />
