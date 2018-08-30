@@ -112,6 +112,8 @@ ERC721Vehicle contract address : 0x608b4012179129a20cb0916af0b03cbe2a8db320
 7. Check the contract on [rinkeby.etherscan.io](https://rinkeby.etherscan.io/address/0x608b4012179129a20cb0916af0b03cbe2a8db320), you should see the transaction
 8. Click on 'Token Tracker:' [Porsche (POR)](https://rinkeby.etherscan.io/token/0x608b4012179129a20cb0916af0b03cbe2a8db320) to explore the Transfers and Holders of Porsche token.
 
+## Transfering ERC721 token to another account
+Of course one important feature would be to be able to send the token to somebody else, but (again) MetaMask cause problems here as other developer report as well, that it simply does not work [https://github.com/MetaMask/metamask-extension/issues/5145](https://github.com/MetaMask/metamask-extension/issues/5145).
 
 
 
