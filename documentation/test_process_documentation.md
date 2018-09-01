@@ -17,14 +17,14 @@ In another terminal, you can compile, migrate and test the contracts locally.
 1. `cd VehicleHistoryLog`
 2. `truffle compile --all` *** 
 DO NOT DO: `truffle develop` and then `> compile` within truffle. It looks like (after just 1 week of research !!) that this produces corrupt contract.json files with missing functions definition! In this case the JavaScript frontend will not be able to access the function signtures and the call to the contract will fail for that function! ***
-3. `truffle migrate`
+3. `truffle migrate --reset --all`
 4. `truffle develop`
 5. `> test`
 You should expect to see 10/10 test run successfully.
 
 ## Web UI
 As mentioned in [README.md](../README.md) the Webinterface it unfortunately pretty unfinished, nevertheless all the smartcontract + React + next.js project integration has been done and it should be possible to start the webserver to get some basic information displayed in a webbrowser.
-1. (Only) if the contract interface (of `ERC721Vehicle.sol`) had been changed and re-compiled, then watch out: The client needs a copy / symlink from `build/contracts` to `client/lib/contracts` as React can not access the .json files outside its (client) directory. Option Copy : `cp -rf ./build/contracts ./client/lib/` or (better on Linux) Option Symlink : `cd client/lib && ln -s ../../build/contracts/ contracts && cd ../..`. There is also a bash script for this : `link-contracts.sh`
+1. (Only) if the contract interface (of `ERC721Vehicle.sol`) had been changed and re-compiled, then watch out: The client needs a copy / symlink from `build/contractsclient/lib/contracts` as React can not access the .json files outside its (client) directory. Option Copy : `cp -rf ./build/contracts ./client/lib/` or (better on Linux) Option Symlink : `cd client/lib && ln -s ../../build/contracts/ contracts && cd ../..`. There is also a bash script for this : `link-contracts.sh`
 2. `cd client` (if you are not within the client directory, you will get an error message `npm ERR! missing script: dev`)
 3. `npm install`
 4. `npm run dev`
