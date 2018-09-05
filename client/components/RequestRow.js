@@ -27,7 +27,7 @@ class RequestRow extends Component {
         <Cell>{request.description}</Cell>
         <Cell>{request.recipient}</Cell>
         <Cell>
-          { <Button color="green" basic onClick={this.onApprove}>Select</Button> }
+          { <Button color="blue" basic onClick={this.onApprove}>Select</Button> }
         </Cell>
       </Row>
     );

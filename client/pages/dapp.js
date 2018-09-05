@@ -134,40 +134,45 @@ class Dapp extends React.Component {
         </pre>
         
         <pre>  
-          <div></div>
           <p />
           <p />
           <button onClick={this.newVehicleToken}>newVehicleToken</button>&nbsp;&nbsp;
           
           <button onClick={this.getVehicleData}>getLastVehicleData</button>&nbsp;&nbsp;
           <p />
+
           <div><b>vehicleData: </b><br />
             model : {this.state.model}<br />
             vin   : {this.state.vin}<br />
             ein   : {this.state.ein}<br />        
           </div>
+
           <p />
           <div>
-            <Link href={"/vehicles/new"}><a>NEW PAGE newVehicle</a></Link>
+            <Link href={"/vehicles/new"}><a>NEW PAGE => /vehicles/new</a></Link>
           </div>
 
           <div>
-          <h2>Vehicle List</h2>
-
+            <h2>Vehicle List</h2>
+            <p />
+            <Link href={"/vehicles/list"}><a>NEW PAGE => /vehicles/list</a></Link>
           </div>
 
-
+          <p />
+          <hr />
 
           <p />
           <button onClick={this.lastHistoryLog}>newHistoryLog - not yet implemented</button>&nbsp;&nbsp;
           <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
           <p />
+
           <div><b>lastHistoryLog: </b><br />
             logEntry_auditor      : {this.state.modlogEntry_auditorel}<br />
             logEntry_milage       : {this.state.logEntry_milage}<br />
             logEntry_description  : {this.state.logEntry_description}<br />
             logEntry_documentURI  : {this.state.logEntry_documentURI}<br />
           </div>
+
         </pre>
       </div>
     )

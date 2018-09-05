@@ -1,12 +1,7 @@
-import getContract from "../../lib/getContract.js";
 import React from 'react'
-import Link from 'next/link'
 import Web3Container from '../../lib/Web3Container';
-
-
 import { Form, Button, Input, Message } from 'semantic-ui-react';
 import Layout from '../../components/Layout';
-// import web3 from '../../ethereum/web3';
 import { Router } from '../../routes';
 
 
@@ -50,7 +45,7 @@ class ERC721VehicleNew extends React.Component {
   render() {
     return (
       <Layout>
-        <h3>Create a ERC721Vehicle</h3>
+        <h3>Create new ERC721Vehicle Token</h3>
 
         <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           <Form.Field>
