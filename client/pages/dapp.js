@@ -20,12 +20,16 @@ class Dapp extends React.Component {
   
   storeValue = async () => {
     const { accounts, contract } = this.props
+    console.log('contract :', contract);
+    console.log('accounts :', accounts);
     await contract.methods.set(5).send({ from: accounts[0] })
     // alert('Stored 5 into variable >value<')
   };
 
   getValue = async () => {
     const { accounts, contract } = this.props
+    console.log('contract :', contract);
+    console.log('accounts :', accounts);
     const response = await contract.methods.get().call({ from: accounts[0] })
     this.setState({ value: response })
   };
@@ -142,6 +146,18 @@ class Dapp extends React.Component {
             vin   : {this.state.vin}<br />
             ein   : {this.state.ein}<br />        
           </div>
+          <p />
+          <div>
+            <Link href={"/vehicles/new"}><a>NEW PAGE newVehicle</a></Link>
+          </div>
+
+          <div>
+          <h2>Vehicle List</h2>
+
+          </div>
+
+
+
           <p />
           <button onClick={this.lastHistoryLog}>newHistoryLog - not yet implemented</button>&nbsp;&nbsp;
           <button onClick={this.lastHistoryLog}>lastHistoryLog</button>&nbsp;&nbsp;
