@@ -5,8 +5,6 @@ import Layout from '../components/Layout';
 
 const Accounts = ({ accounts }) => (
   <div>
-    <Layout />
-    <h3>Accounts</h3>
     <pre>{JSON.stringify(accounts, null, 4)}</pre>
     <div><Link href='/dapp'><a>My Dapp</a></Link></div>
     <div><Link href='/'><a>Home</a></Link></div>
@@ -16,6 +14,12 @@ const Accounts = ({ accounts }) => (
 export default () => (
   <Web3Container
     renderLoading={() => <div>Loading Accounts Page...</div>}
-    render={({ accounts }) => <Accounts accounts={accounts} />}
+    render={({ accounts }) => 
+    <div>
+      <Layout>
+        <h3>Accounts</h3>
+        <Accounts accounts={accounts} />
+      </Layout>
+    </div>}
   />
 )
