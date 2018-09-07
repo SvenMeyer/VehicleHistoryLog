@@ -95,10 +95,6 @@ class Dapp extends React.Component {
 
   render () {
 
-    // web3.eth.getAccounts().then(console.log);
-
-    const { value = 'N/A', lastSerial = 'N/A', ethBalance = 'N/A'} = this.state
-
     return (
       <div>
         <h1><pre>VehicleLogHistory</pre></h1>
@@ -113,6 +109,15 @@ class Dapp extends React.Component {
         <p />
 
         <pre>
+          this.props.web3.version : {this.props.web3.version} &nbsp;
+        </pre>
+
+        <pre>
+          this.props.contract._address : {this.props.contract._address} &nbsp;
+          <Link href={('https://rinkeby.etherscan.io/address/').concat(this.props.contract._address)}><a target="_blank">[rinkeby.etherscan.io]</a></Link>
+        </pre>
+
+        <pre>
           current account : {this.props.accounts} &nbsp;
           <Link href={('https://rinkeby.etherscan.io/address/').concat(this.props.accounts)}><a target="_blank">[rinkeby.etherscan.io]</a></Link>
         </pre>
@@ -120,17 +125,18 @@ class Dapp extends React.Component {
         <pre>
           <p />
           <button onClick={this.getEthBalance}>getEthBalance</button> &nbsp;
-          Ether Balance : {ethBalance}
+          Ether Balance : {this.state.ethBalance}
         </pre>
 
         <pre>
           <button onClick={this.storeValue}>Basic Test - Store a value (5)</button> &nbsp;&nbsp;
           <button onClick={this.getValue}>Basic Test - Retrieve value</button> &nbsp;&nbsp;
-          Test - value : {value}
+          Test - value : {this.state.value}
         </pre>
 
         <pre>
-          <button onClick={this.getLastSerial}>get last new tokenId</button> &nbsp; last new tokenId : {lastSerial}
+          <button onClick={this.getLastSerial}>get last new tokenId</button>
+          &nbsp; last new tokenId : {this.state.lastSerial}
         </pre>
         
         <pre>  
@@ -181,7 +187,7 @@ class Dapp extends React.Component {
 
 export default () => (
   <Web3Container
-    renderLoading={() => <div>Loading Vehicles Page...</div>}
+    renderLoading={() => <div>Loading Simple UI Page ...</div>}
     render={({ web3, accounts, contract }) => (
       <Dapp accounts={accounts} contract={contract} web3={web3} />
     )}
