@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 const Accounts = ({ accounts }) => (
   <div>
     <pre>{JSON.stringify(accounts, null, 4)}</pre>
-    <div><Link href='/dapp'><a>My Dapp</a></Link></div>
+    <div><Link href='/dapp'><a>Simple UI</a></Link></div>
     <div><Link href='/'><a>Home</a></Link></div>
   </div>
 )
