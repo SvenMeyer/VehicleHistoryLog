@@ -20,7 +20,7 @@ export default () => {
           <a className="item">Vehicle New</a>
         </Link>
 
-        <Link route="/vehicles">
+        <Link route="/vehicles/list">
           <a className="item">Vehicles List</a>
         </Link>
 
