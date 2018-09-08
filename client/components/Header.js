@@ -12,6 +12,10 @@ export default () => {
 
       <Menu.Menu position="left">
 
+        <Link route='/dapp'>
+          <a className="item">Simple UI</a>
+        </Link>
+
         <Link route="/accounts">
           <a className="item">Accounts</a>
         </Link>
