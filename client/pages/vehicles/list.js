@@ -74,7 +74,7 @@ class ERC721VehicleList extends React.Component {
 		console.log(this.state.vehicles[i].ein);
 		// console.log('v =', v);
 		return (
-			<Row>
+			<Row key={i}>
 				<Cell>{i}</Cell>
 				<Cell>{this.state.vehicles[i].model}</Cell>
 				<Cell>{this.state.vehicles[i].vin}</Cell>
