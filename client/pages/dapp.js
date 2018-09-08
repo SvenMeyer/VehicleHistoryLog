@@ -70,12 +70,14 @@ class Dapp extends React.Component {
     this.setState({ lastTokenId: tokenId })
   };
 
-  getVehicleData = async () => {
+  getVehicleDataLast = async () => {
     console.log('getVehicleData -------------------------')
-    console.log(this.state.lastSerial)
-    const tokenId = Number(this.state.lastSerial);
-    console.log({ tokenId })
     const { accounts, contract } = this.props
+    console.log(this.state.lastSerial)
+    // const tokenId = Number(this.state.lastSerial);
+    const lastSerial = await contract.methods.getLastSerial().call({ from: accounts[0] })
+    const tokenId = Number(lastSerial)
+    console.log({ tokenId })
     const response = await contract.methods.getVehicleData(tokenId).call({ from: accounts[0] })
     console.log('getVehicleData(1) : response =', response)
     this.setState({ model: response[0], vin: response[1], ein: response[2] })
@@ -184,9 +186,12 @@ class Dapp extends React.Component {
         <pre>  
           <p />
           <p />
+
+          {/*}
           <button onClick={this.newVehicleToken}>newVehicleToken</button>&nbsp;&nbsp;
+          */}
           
-          <button onClick={this.getVehicleData}>getLastVehicleData</button>&nbsp;&nbsp;
+          <button onClick={this.getVehicleDataLast}>getVehicleDataLast</button>&nbsp;&nbsp;
           <p />
 
           <div><b>vehicleData: </b><br />
