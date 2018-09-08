@@ -25,12 +25,12 @@ class Dapp extends React.Component {
     };
 
     this.props.web3.eth.net.getId()
-      .then(id => this.setState({ networkId: id }));
+      .then(_networkId => this.setState({ networkId: _networkId }));
 
     this.props.web3.eth.net.getNetworkType()
-      .then(type => {
-        this.state.etherscanLink = ('https://').concat(type).concat('.etherscan.io/address/');
-        this.setState({ networkType: type });
+      .then(_networkType => {
+        this.state.etherscanLink = ('https://').concat(_networkType, '.etherscan.io/address/');
+        this.setState({ networkType: _networkType });
       });
   };
 
@@ -109,8 +109,8 @@ class Dapp extends React.Component {
 
   /* does this work ? */
   getNetworkId = async () => {
-    const Id = await this.props.web3.eth.net.getId();
-    this.setState({ networkId: Id })
+    const _networkId = await this.props.web3.eth.net.getId();
+    this.setState({ networkId: _networkId })
   };
 
   getNetworkType = async () => {
