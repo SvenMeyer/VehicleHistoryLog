@@ -3,19 +3,39 @@ import Link from 'next/link'
 import Web3Container from '../lib/Web3Container'
 
 class Dapp extends React.Component {
-  state = {
-    value: undefined,
-    ethBalance: undefined,
-    lastSerial: 0,
-    vehicleData: undefined,
-    model: undefined,
-    vin: undefined,
-    ein: undefined,
-    logEntry_auditor: '', 
-    logEntry_milage: '',
-    logEntry_description: '', 
-    logEntry_documentURI: '',
-    networkId: ''
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: undefined,
+      ethBalance: undefined,
+      lastSerial: 0,
+      vehicleData: undefined,
+      model: undefined,
+      vin: undefined,
+      ein: undefined,
+      logEntry_auditor: '',
+      logEntry_milage: '',
+      logEntry_description: '',
+      logEntry_documentURI: '',
+      networkId: undefined,
+      networkType: '',
+      etherscanLink: ''
+    };
+
+    this.props.web3.eth.net.getId()
+      .then(id => this.setState({ networkId: id }));
+
+    this.props.web3.eth.net.getNetworkType()
+      .then(type => {
+        this.state.etherscanLink = ('https://').concat(type).concat('.etherscan.io/address/');
+        this.setState({ networkType: type });
+      });
+  };
+
+  componentDidMount() {
+    console.log('Dapp: componentDidMount');
   };
   
   storeValue = async () => {
@@ -87,13 +107,22 @@ class Dapp extends React.Component {
     this.setState({ ethBalance: balanceInWei / 1e18 })
   };
 
+  /* does this work ? */
   getNetworkId = async () => {
-    networkId = await web3.eth.net.getId();
-    this.setState({ networkId: networkId })
+    const Id = await this.props.web3.eth.net.getId();
+    this.setState({ networkId: Id })
   };
 
+  getNetworkType = async () => {
+    networkType = await this.props.web3.eth.net.getNetworkType();
+    this.setState({ networkType: networkType })
+  };  
 
   render () {
+
+    const { accounts, contract, web3 } = this.props;
+
+    console.log(this.state.etherscanLink);
 
     return (
       <div>
@@ -107,19 +136,32 @@ class Dapp extends React.Component {
         </div>
 
         <p />
-
+        
         <pre>
-          this.props.web3.version : {this.props.web3.version} &nbsp;
+          networkId         : {this.state.networkId} &nbsp;
         </pre>
 
         <pre>
-          this.props.contract._address : {this.props.contract._address} &nbsp;
-          <Link href={('https://rinkeby.etherscan.io/address/').concat(this.props.contract._address)}><a target="_blank">[rinkeby.etherscan.io]</a></Link>
+          networkType       : {this.state.networkType} &nbsp;
         </pre>
 
         <pre>
-          current account : {this.props.accounts} &nbsp;
-          <Link href={('https://rinkeby.etherscan.io/address/').concat(this.props.accounts)}><a target="_blank">[rinkeby.etherscan.io]</a></Link>
+          web3.version      : {web3.version} &nbsp;
+        </pre>
+
+        <pre>
+          contract._address : {contract._address} &nbsp;
+          <Link href={this.state.etherscanLink.concat(contract._address)}>
+            <a target="_blank">{(this.state.networkType).concat('.etherscan.io')}</a>
+          </Link>
+        </pre>
+
+        <pre>
+          current accounts  : {accounts} &nbsp;
+          <Link href={this.state.etherscanLink.concat(accounts[0])}>
+            <a target="_blank">{(this.state.networkType).concat('.etherscan.io')}</a>
+          </Link>
+          
         </pre>
           
         <pre>
