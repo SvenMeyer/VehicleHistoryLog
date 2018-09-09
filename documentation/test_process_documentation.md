@@ -17,10 +17,14 @@ In another terminal, you can compile, migrate and test the contracts locally.
 1. `cd VehicleHistoryLog`
 2. `truffle compile --all` *** 
 DO NOT DO: `truffle develop` and then `> compile` within truffle. It looks like (after just 1 week of research !!) that this produces corrupt contract.json files with missing functions definition! In this case the JavaScript frontend will not be able to access the function signtures and the call to the contract will fail for that function! ***
-3. `truffle migrate --reset --all`
+3. `truffle migrate --reset --all` (deploy on truffle blockchain - port 9545)
 4. `truffle develop`
-5. `> test`
-You should expect to see 10/10 test run successfully.
+5. `> test` You should expect to see 10/10 test run successfully.
+
+## deploy on ganache-cli
+I had some problems with ganache-cli (maybe because of using web3@1.0.0-beta, but the last time I checked it worked well. To deploy on ganache-cli (port 8545 do:)
+1. (new terminal window) `ganache-cli`
+2. (terminal with truffle) `> migrate --reset --all --network local8545`
 
 ## Web UI
 As mentioned in [README.md](../README.md) the Webinterface it unfortunately pretty unfinished, nevertheless all the smartcontract + React + next.js project integration has been done and it should be possible to start the webserver to get some basic information displayed in a webbrowser.
@@ -28,8 +32,8 @@ As mentioned in [README.md](../README.md) the Webinterface it unfortunately pret
 2. `cd client` (if you are not within the client directory, you will get an error message `npm ERR! missing script: dev`)
 3. `npm install`
 4. `npm run dev`
-5. Within MetaMask select the ganache-cli local blockchain network: [http://localhost:8545](http://localhost:8545)
-6. Create a new wallet using the menmonic displayed by genache-cli at startup
+5. Within MetaMask select either the ganache-cli local blockchain network: [http://localhost:8545](http://localhost:8545) or truffle develop blockchain network [http://localhost:9545](http://localhost:9545)
+6. Create a new wallet using the menmonic displayed at startup (either ganache-cli or truffle develop)
 (When developing it is actually a good idea to quite often restart ganache-cli and create a new MetaMask wallet as MetaMask notoriously caches stuff which may cause a lot of problems. [https://medium.com/coinmonks/what-we-learned-building-our-first-dapp-28b01f9fc244](https://medium.com/coinmonks/what-we-learned-building-our-first-dapp-28b01f9fc244))
 7. Access with your browser [http://localhost:3000](http://localhost:3000)
 
@@ -40,12 +44,27 @@ The basic functionality should work:
 - reflect update to the contract state by executing "getLastVehicleData"
 - reflect update to the contract state by executing "getLastSerial" (will show up after "last new tokenId")
 - get Ether Balance
+- create a new ERC721Vehicle token
+- list and retrieve data of all ERC721Vehicle token
 
+## Use Deployed contract of Rinkeby Testnet
+There is a contract already deployed on the Rinkeby network, which you can also use:
+1. Logout of MetaMask
+2. Select Rinkeby Network
+3. As most functions (currently) only work with the account of the deployer, you have to create the wallet from the mnemonic defined in env variable `HDWALLET_MNEMONIC` in file `.envrc` : "tomorrow draft giggle design purchase daring goddess cute inquiry giant thumb journey" (please do not drain all funds")
+4. Best thing if you are on linux is just to do `source .envrc`
+5. Access with your browser [http://localhost:3000](http://localhost:3000) , the UI will automatically use the contract on the Rinkeby network.
+6. The "Simple UI" page [http://localhost:3000/dapp](http://localhost:3000/dapp) will also create links to etherscan to check accounts, smart contract and transactions if you used the Rinkeby network.
+
+Unfortunately some of the software cache content, so if something does not work, then try:
+1. Reset Wallet witnin MetaMask
+2. restart ganache-cli and redeploy contracts
+3. Restart webserver `Ctrl-C` `npm run dev`
 
 ## Deploy to Rinkeby Testnet
-There is already a contract deploayed on Rinkeby, but if you want to try it yourself, it should be pretty easy with the setup provide.
-1. make sure you have enough test ETH in the Rinkeby account with the corresponding wallet mnemonic defined in env variable `HDWALLET_MNEMONIC`
-2. `truffle migrate --network rinkeby --reset`
+You can also easily deploy the contract on the Rinkeby net yourself:
+1. make sure you have enough test ETH in the Rinkeby account
+2. `truffle migrate --reset --all --network rinkeby`
 
 ```
 Using network 'rinkeby'.
