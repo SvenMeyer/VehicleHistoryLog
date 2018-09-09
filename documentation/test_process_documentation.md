@@ -22,7 +22,7 @@ DO NOT DO: `truffle develop` and then `> compile` within truffle. It looks like 
 5. `> test` You should expect to see 10/10 test run successfully.
 
 ## deploy on ganache-cli
-I had some problems with ganache-cli (maybe because of using web3@1.0.0-beta, but the last time I checked it worked well. To deploy on ganache-cli (port 8545 do:)
+I had some problems with ganache-cli (maybe because of using web3@1.0.0-beta, but the last time I checked it worked well. To deploy on ganache-cli (port 8545) do:
 1. (new terminal window) `ganache-cli`
 2. (terminal with truffle) `> migrate --reset --all --network local8545`
 
@@ -57,8 +57,8 @@ There is a contract already deployed on the Rinkeby network, which you can also 
 6. The "Simple UI" page [http://localhost:3000/dapp](http://localhost:3000/dapp) will also create links to etherscan to check accounts, smart contract and transactions if you used the Rinkeby network.
 
 Unfortunately some of the software cache content, so if something does not work, then try:
-1. Reset Wallet witnin MetaMask
-2. restart ganache-cli and redeploy contracts
+1. Reset Wallet within MetaMask
+2. restart `ganache-cli` and redeploy contracts
 3. Restart webserver `Ctrl-C` `npm run dev`
 
 ## Deploy to Rinkeby Testnet
@@ -133,7 +133,7 @@ ERC721Vehicle contract address : 0x608b4012179129a20cb0916af0b03cbe2a8db320
 8. Click on 'Token Tracker:' [Porsche (POR)](https://rinkeby.etherscan.io/token/0x608b4012179129a20cb0916af0b03cbe2a8db320) to explore the Transfers and Holders of Porsche token.
 
 ## Transfering ERC721 token to another account
-Of course one important feature would be to be able to send the token to somebody else, but (again) MetaMask cause problems here as other developer report as well, that it simply does not work [https://github.com/MetaMask/metamask-extension/issues/5145](https://github.com/MetaMask/metamask-extension/issues/5145).
+Of course one important feature would be to be able to send the token to somebody else, but (again) MetaMask causes problems here as other developer report as well, that it simply does not work [https://github.com/MetaMask/metamask-extension/issues/5145](https://github.com/MetaMask/metamask-extension/issues/5145).
 
 
 
